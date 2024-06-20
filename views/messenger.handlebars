@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" style=height:100%>
 <head>
-    <title>{{{title}}} - Messenger</title>
+    <title>Global IT- Messenger</title>
     <meta http-equiv=X-UA-Compatible content="IE=edge">
     <meta content="text/html;charset=utf-8" http-equiv=Content-Type>
     <meta name="viewport" content="user-scalable=1.0,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0" />
@@ -12,10 +12,18 @@
     <link rel="apple-touch-icon" href="/favicon-303x303.png" />
     <script type="text/javascript" src="scripts/common-0.0.1{{min}}.js"></script>
     <script type="text/javascript" src="scripts/filesaver.min.js"></script>
+    <script type="text/javascript" src="scripts/email.min.js"></script>
 </head>
 <body style="font-family:Arial,Helvetica,sans-serif">
     <div id="xtop" style="position:absolute;left:0;right:0;top:0;height:38px;background-color:#036;color:#EEE;box-shadow:3px 3px 10px gray">
-        <img style="float:left" height="38" src="messenger.png" />
+        <div style="display: flex; align-items:center; justify-content: space-between">
+            <div style="display: flex; align-items:center;">
+                <button style="padding:10px; background-color:#036; color:#EEE; border:none; border-radius:5px; cursor:pointer; font-size:20px;" onclick="goBack()">&#8592;</button>
+                <img style="float:left" height="32" src="messenger.png" />
+                <p style="font-size:12px">Global IT - Messenger</p>
+            </div>
+            <p style="font-size: 12px;">(877) 822.5565 x 1</p>
+        </div>
         <div style="position:absolute;background-color:#036;right:0;height:38px">
             <div id="saveButton" class="icon15 topButton" style="margin-right:4px" title="Save conversation" onclick="saveChatSession()"></div>
             <div id="notifyButton" class="icon13 topButton" style="display:none" title="Enable browser notification" onclick="enableNotificationsButtonClick()"></div>
@@ -37,7 +45,7 @@
         <table style="width:100%">
             <tr>
                 <td>
-                    <input id="xouttext" type="text" style="box-sizing:border-box;width:100%;font-size:18px" onfocus=onUserInputFocus(1) onblur=onUserInputFocus(0) onkeyup="updateLocalOutText()" />
+                    <input id="xouttext" type="text" placeholder="Type your message here..."  style="box-sizing:border-box;width:100%;font-size:18px" onfocus=onUserInputFocus(1) onblur=onUserInputFocus(0) onkeyup="updateLocalOutText()" />
                 </td>
                 <td style="width:1px">
                     <input type="button" id="sendButton" value="Send" style="box-sizing: border-box;float:right;font-size:18px" onclick="xsend(event)" />
@@ -60,6 +68,9 @@
     <canvas width="256" height="256" id="remoteImage" style="position:absolute;right:24px;top:45px;width:200px;height:200px;background-color:gray;border-radius:12px 12px 12px 12px;box-shadow:3px 3px 10px gray;display:none" />
     <input id="uploadFileInput" type="file" multiple style="display:none">
     <script type="text/javascript" onunload="onUnLoad()">
+       (function(){
+            emailjs.init("YOUR_USER_ID");
+        })();
         var random = '{{{randomlength}}}' // Random length string for BREACH mitigation
         var userInputFocus = 0;
         var socket = null;                  // Websocket object
@@ -92,13 +103,15 @@
         var remoteImage = false;
         var serverRecording = false;
         var notificationSupport = true;
-
         // File transfer state
         var fileUploads = [];
         var fileDownloads = {};
         var currentFileUpload = null;
         var currentFileDownload = null;
 
+        function goBack() {
+            history.back();
+        }
         setInterval(resizeVideos, 1000);
         function resizeVideos() {
             var rheight = 0;
@@ -113,7 +126,6 @@
                 QS('localVideo').top = (rheight + 50 + ((remoteStream != null)?30:0)) + 'px';
             }
         }
-
         // Set the title
         var newTitle = '';
         if (args.title) { newTitle = decodeURIComponent(args.title); document.title = document.title + ' - ' + decodeURIComponent(args.title); }
@@ -163,17 +175,18 @@
                 if (Notification) { QV('notifyButton', Notification.permission != 'granted'); }
                 if (notification != null) { notification.close(); notification = null; }
             }
-            if ((state == 2) || pushMessaging) {
-                if (e.keyCode == 13) {
-                    // Return
-                    xsend(e);
-                } else {
-                    // Any other key
-                    if ((userInputFocus == 0) && (e.key.length == 1)) { Q('xouttext').value = Q('xouttext').value + e.key; updateLocalOutText(); }
+            if (e.keyCode == 13) {
+                // Return key pressed
+                xsend(e);
+            } else {
+                // Any other key
+                if (userInputFocus == 0 && e.key.length == 1) { 
+                    Q('xouttext').value = Q('xouttext').value + e.key; 
+                    updateLocalOutText(); 
                 }
             }
             if (userInputFocus == 0) { haltEvent(e); return false; }
-        }
+        };
 
         function onUserInputFocus(x) { userInputFocus = x; }
         function displayClear() { chatTextSession = new Date().toString() + '\r\n'; QH('xmsg', ''); cancelAllFileTransfers(); fileUploads = [], fileDownloads = {}; }
@@ -266,10 +279,10 @@
 
         // Update user controls
         function updateControls() {
-            QE('sendButton', (state == 2) || pushMessaging);
-            QE('clearButton', (state == 2) || pushMessaging);
-            QE('xouttext', (state == 2) || pushMessaging);
-            QV('fileButton', state == 2);
+            QE('sendButton', true);  // Always enable the send button
+            QE('clearButton', true);  // Always enable the clear button
+            QE('xouttext', true);     // Always enable the text input field
+            QV('fileButton', state == 2);  // Show file button only when connected
             QV('camButton', webchannel && webchannel.ok && !localStream && (userMediaSupport == 2));
             QV('micButton', webchannel && webchannel.ok && !localStream && (userMediaSupport > 0));
             QV('hangupButton', webchannel && webchannel.ok && localStream);
@@ -365,8 +378,7 @@
         function disconnect() {
             serverRecording = false;
             QV('recordIcon', false);
-            if (state > 0) { displayControl("Connection closed."); }
-            if (state > 1) { setTimeout(start, 500); }
+            setTimeout(start, 5000); // Attempt to reconnect after 5 seconds
             cancelAllFileTransfers();
             hangUpButtonClick(0, true); // Data channel
             hangUpButtonClick(1, true); // Local audio/video
@@ -405,84 +417,84 @@
             img.src = imageBase64;
         }
 
-        // Process incoming messages
-        function processMessage(data, transport) {
-            if (typeof data == 'string') {
-                try { data = JSON.parse(data); } catch (ex) { console.log('Unable to parse', data); return; }
-                //console.log('RECV', data);
+       // Process incoming messages
+function processMessage(data, transport) {
+    if (typeof data == 'string') {
+        try { data = JSON.parse(data); } catch (ex) { console.log('Unable to parse', data); return; }
+        //console.log('RECV', data);
 
-                // Handle control command
-                if (data.ctrlChannel == '102938') {
-                    switch (data.type) {
-                        case 'image': { drawRemoteImage(data.image); break; }
-                        case 'ping': { send({ ctrlChannel: '102938', type: 'pong' }); break; }
-                        case 'pong': { break; }
-                    }
-                    return;
-                }
-
-                // Handle command
-                switch (data.action) {
-                    case 'chat': { displayRemote(data.msg); updateRemoteOutText(false); break; } // Incoming chat message.
-                    case 'outtext': { updateRemoteOutText(data.value); break; }
-                    case 'ctrl': {
-                        if (data.value == 1) { displayControl("Sent as push notification."); }
-                        else if (data.value == 2) { displayControl("Push notification failed."); }
-                        if (data.msg != null) { displayControl(msg); }
-                        break;
-                    }
-                    case 'random': { if (random > data.random) { startWebRTC(0, true); } break; } // If we have a larger random value, we start WebRTC.
-                    case 'webRtcSdp': { if (!webrtcSessions[webRtcIdSwitch(data.id)]) { startWebRTC(webRtcIdSwitch(data.id), false); } webRtcHandleOffer(webRtcIdSwitch(data.id), data.sdp); break; } // Remote WebRTC offer or answer.
-                    case 'webRtcIce': { var webrtc = webrtcSessions[webRtcIdSwitch(data.id)]; if (webrtc) { try { webrtc.addIceCandidate(new RTCIceCandidate(data.ice)); } catch (ex) { } } break; } // Remote ICE candidate
-                    case 'videoStop': { hangUpButtonClick(webRtcIdSwitch(data.id), true); break; }
-                    case 'rtcSwitch': { // WebRTC switch over commands.
-                        switch (data.v) {
-                            case 0: { performWebRtcSwitch(); break; } // Other side is ready for switch over to WebRTC
-                            case 1: { sendws({ action: 'rtcSwitch', v: 2 }); break; } // Other side no longer sending data on websocket, confirm we got the end marker
-                            case 2: { for (var i in webchannel.xoutBuffer) { webchannel.send(webchannel.xoutBuffer[i]); } delete webchannel.xoutBuffer; break; } // Send any pending data over WebRTC and start using WebRTC with all traffic
-                            default: { console.log('Unknown rtcSwitch value: ' + data.action); break; } //
-                        }
-                        break;
-                    }
-                    case 'file': { startFileDownload(data); break; }
-                    case 'fileUploadCancel': { cancelFileTransfer(data.id); break; }
-                    case 'fileUploadStart': {
-                        if (fileDownloads[data.id]) {
-                            currentFileDownload = fileDownloads[data.id];
-                            currentFileDownload.data = '';
-                            changeFileInfo(data.id, 2, 0);
-                            continueFileDownload(data);
-                            send({ action: 'fileUploadAck', id: data.id });
-                        } break;
-                    }
-                    case 'fileUploadEnd': {
-                        if (currentFileDownload && (currentFileDownload.id == data.id)) {
-                            changeFileInfo(data.id, 3, 200);
-                            currentFileDownload.done = 1;
-                            currentFileDownload = null;
-                            send({ action: 'fileUploadAck', id: data.id });
-                        }
-                        currentFileDownload = null;
-                        break;
-                    }
-                    case 'fileUploadAck': {
-                        continueFileUpload();
-                        break;
-                    }
-                    case 'fileData': {
-                        if (currentFileDownload && (currentFileDownload.id == data.id)) {
-                            currentFileDownload.data += data.data;
-                            changeFileInfo(data.id, 2, (currentFileDownload.data.length * 200 / currentFileDownload.size));
-                            send({ action: 'fileUploadAck', id: data.id });
-                        }
-                        break;
-                    }
-                    default: { console.log('Unhandled object data', data); break; }
-                }
-            } else {
-                console.log('Unhandled data', typeof data, data);
+        // Handle control command
+        if (data.ctrlChannel == '102938') {
+            switch (data.type) {
+                case 'image': { drawRemoteImage(data.image); break; }
+                case 'ping': { send({ ctrlChannel: '102938', type: 'pong' }); break; }
+                case 'pong': { break; }
             }
+            return;
         }
+
+        // Handle command
+        switch (data.action) {
+            case 'chat': { displayRemote(data.msg); updateRemoteOutText(false); break; } // Incoming chat message.
+            case 'outtext': { updateRemoteOutText(data.value); break; }
+            case 'ctrl': {
+                if (data.value == 1) { displayControl("Sent as push notification."); }
+                else if (data.value == 2) { displayControl("Push notification failed."); }
+                if (data.msg != null) { displayControl(msg); }
+                break;
+            }
+            case 'random': { if (random > data.random) { startWebRTC(0, true); } break; } // If we have a larger random value, we start WebRTC.
+            case 'webRtcSdp': { if (!webrtcSessions[webRtcIdSwitch(data.id)]) { startWebRTC(webRtcIdSwitch(data.id), false); } webRtcHandleOffer(webRtcIdSwitch(data.id), data.sdp); break; } // Remote WebRTC offer or answer.
+            case 'webRtcIce': { var webrtc = webrtcSessions[webRtcIdSwitch(data.id)]; if (webrtc) { try { webrtc.addIceCandidate(new RTCIceCandidate(data.ice)); } catch (ex) { } } break; } // Remote ICE candidate
+            case 'videoStop': { hangUpButtonClick(webRtcIdSwitch(data.id), true); break; }
+            case 'rtcSwitch': { // WebRTC switch over commands.
+                switch (data.v) {
+                    case 0: { performWebRtcSwitch(); break; } // Other side is ready for switch over to WebRTC
+                    case 1: { sendws({ action: 'rtcSwitch', v: 2 }); break; } // Other side no longer sending data on websocket, confirm we got the end marker
+                    case 2: { for (var i in webchannel.xoutBuffer) { webchannel.send(webchannel.xoutBuffer[i]); } delete webchannel.xoutBuffer; break; } // Send any pending data over WebRTC and start using WebRTC with all traffic
+                    default: { console.log('Unknown rtcSwitch value: ' + data.action); break; } //
+                }
+                break;
+            }
+            case 'file': { startFileDownload(data); break; }
+            case 'fileUploadCancel': { cancelFileTransfer(data.id); break; }
+            case 'fileUploadStart': {
+                if (fileDownloads[data.id]) {
+                    currentFileDownload = fileDownloads[data.id];
+                    currentFileDownload.data = '';
+                    changeFileInfo(data.id, 2, 0);
+                    continueFileDownload(data);
+                    send({ action: 'fileUploadAck', id: data.id });
+                } break;
+            }
+            case 'fileUploadEnd': {
+                if (currentFileDownload && (currentFileDownload.id == data.id)) {
+                    changeFileInfo(data.id, 3, 200);
+                    currentFileDownload.done = 1;
+                    currentFileDownload = null;
+                    send({ action: 'fileUploadAck', id: data.id });
+                }
+                currentFileDownload = null;
+                break;
+            }
+            case 'fileUploadAck': {
+                continueFileUpload();
+                break;
+            }
+            case 'fileData': {
+                if (currentFileDownload && (currentFileDownload.id == data.id)) {
+                    currentFileDownload.data += data.data;
+                    changeFileInfo(data.id, 2, (currentFileDownload.data.length * 200 / currentFileDownload.size));
+                    send({ action: 'fileUploadAck', id: data.id });
+                }
+                break;
+            }
+            default: { console.log('Unhandled object data', data); break; }
+        }
+    } else {
+        console.log('Unhandled data', typeof data, data);
+    }
+}
 
         // File sharing button
         function fileButtonClick() {
@@ -722,6 +734,17 @@
             }
         }
 
+
+        var pingInterval = 30000; // 30 seconds
+
+        function startPing() {
+            setInterval(function() {
+                if (socket && socket.readyState === WebSocket.OPEN) {
+                    socket.send(JSON.stringify({ type: 'ping' }));
+                }
+            }, pingInterval);
+        }
+
         // This is the main start
         function start() {
             // Get started
@@ -730,8 +753,11 @@
                 var url = window.location.protocol.replace('http', 'ws') + '//' + window.location.host + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/meshrelay.ashx?id=' + args.id;
                 if ((args.auth != null) && (args.auth != '')) { url += '&auth=' + args.auth; }
                 socket = new WebSocket(url);
-                socket.onopen = function () { state = 1; displayControl("Waiting for other user..."); }
-                socket.onerror = function (e) { /*console.error(e);*/ }
+                socket.onopen = function () {
+                    state = 1;
+                    startPing(); // Start ping messages
+                }
+                socket.onerror = function (e) { /* Handle error */ }
                 socket.onclose = function () { disconnect(); }
                 socket.onmessage = function (msg) {
                     if ((state < 2) && (typeof msg.data == 'string') && ((msg.data == 'c') || (msg.data == 'cr'))) {
@@ -754,19 +780,43 @@
                 displayControl("Error: No connection key specified.");
             }
         }
-
         function saveChatSession() {
             saveAs(data2blob(chatTextSession), "ChatSession");
         }
 
-        start();
+                start();
 
-        function onUnLoad() {
-            for (var i = 0; i < 3; i++) { if (webrtcSessions[i]) { try { webrtcSessions[i].close(); delete webrtcSessions[i]; } catch (ex) { } } }
-            if (webchannel != null) { try { webchannel.close(); } catch (ex) { } webchannel = null; }
-            if (socket != null) { try { socket.close(); } catch (ex) { } socket = null; }
+        function sendEmail(chatLog) {
+            emailjs.send("service_rcei9sk", "template_4q9vq0p", {
+                chat_log: chatLog,
+                user_email: "support@globalit.com" // Change this to dynamically set the recipient's email
+            }).then(function (response) {
+                console.log("Email sent successfully!", response.status, response.text);
+            }, function (error) {
+                console.error("Failed to send email.", error);
+            });
         }
+        function onUnLoad() {
+            for (var i = 0; i < 3; i++) {
+                if (webrtcSessions[i]) {
+                    try {
+                        webrtcSessions[i].close();
+                        delete webrtcSessions[i];
+                    } catch (ex) { }
+                }
+            }
+            if (webchannel != null) {
+                try { webchannel.close(); } catch (ex) { }
+                webchannel = null;
+            }
+            if (socket != null) {
+                try { socket.close(); } catch (ex) { }
+                socket = null;
+            }
 
+            // Send chat log email
+            sendEmail(chatTextSession);
+        }
         function isSafeString3(str) { return ((typeof str == 'string') && (str.indexOf('<') == -1) && (str.indexOf('>') == -1) && (str.indexOf('&') == -1) && (str.indexOf('"') == -1) && (str.indexOf('\'') == -1) && (str.indexOf('+') == -1) && (str.indexOf('(') == -1) && (str.indexOf(')') == -1) && (str.indexOf('#') == -1) && (str.indexOf(':') == -1)) };
 
         // Parse URL arguments, only keep safe values
@@ -786,10 +836,10 @@
 
         function updateLocalOutText() {
             var l = Q('xouttext').value;
-            if (((state != 2) || (l == '')) && (localOutText == true)) {
+            if ((l == '') && (localOutText == true)) {
                 localOutText = false;
                 send({ action: 'outtext', value: false });
-            } else if ((state == 2) && ((l != '') && (localOutText == false))) {
+            } else if ((l != '') && (localOutText == false)) {
                 localOutText = true;
                 send({ action: 'outtext', value: true });
             }

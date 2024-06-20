@@ -47,7 +47,7 @@
     <script keeplink=1 type="text/javascript" src="scripts/filesaver.min.js"></script>
     <script keeplink=1 type="text/javascript" src="scripts/ol{{{min}}}.js"></script>
     <script keeplink=1 type="text/javascript" src="scripts/ol3-contextmenu{{{min}}}.js"></script>
-    <title>{{{title}}}</title>
+    <title>Global IT</title>
 </head>
 <body id="body" oncontextmenu="handleContextMenu(event)" style="display:none;min-width:495px" onload="if (typeof(startup) !== 'undefined') startup();">
     <!-- right click menu -->
@@ -155,8 +155,7 @@
         <div id="notifiyBox" class="notifiyBox" style="display:none"></div>
         <div id=masthead class=noselect>
             <div style="float:left">{{{titlehtml}}}</div>
-            <div class="title" onclick="go(1,event)">{{{title1}}}</div>
-            <div class="title2">{{{title2}}}</div>
+            <div class="title" onclick="go(1,event)">Global IT</div>
             <div style="float:right">
                 <div id=notificationCount onclick="clickNotificationIcon()" class="unselectable" style="display: none;" title="Click to view current notifications">0</div>
             </div>
@@ -1663,7 +1662,7 @@
             // Setup logout control
             var logoutControl = '';
             if (logoutControls) {
-                if (logoutControls.name != null) { logoutControl = ('<span onmouseup=go(2) CLASS="LogoffLinkColor" style="cursor:pointer">' + format("Welcome {0}.", logoutControls.name) + '</span>'); }
+                if (logoutControls.name != null) { logoutControl = ('<span onmouseup=go(2) CLASS="LogoffLinkColor" style="cursor:pointer">' + format("Welcome {0}", logoutControls.name) + '</span>'); }
                 if (logoutControls.logoutUrl != null) { logoutControl += format(' <a href="' + logoutControls.logoutUrl + '" CLASS="LogoffLinkColor">' + "Logout" + '</a>'); }
             }
             if (args.hide & 1) { QH('logoutControlSpan2', logoutControl); } else { QH('logoutControlSpan', logoutControl); }
@@ -8134,7 +8133,7 @@
             if (e && (e.shiftKey == true)) {
                 safeNewWindow(url, 'meshmessenger:' + currentNode._id);
             } else {
-                safeNewWindow(url, 'meshmessenger:' + currentNode._id, 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=400,height=560');
+                 window.location.href = url;
             }
             meshserver.send({ action: 'meshmessenger', nodeid: decodeURIComponent(currentNode._id) });
         }
