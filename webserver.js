@@ -8496,6 +8496,9 @@ module.exports.CreateWebServer = function (parent, db, args, certificates, doneF
 
     // Return the correct render page arguments.
     function getRenderArgs(xargs, req, domain, page) {
+        var user = obj.users[req.session.userid];
+        xargs.userid = req.session.userid;
+        xargs.username = user ? user.name : 'anonymous';
         var minify = (domain.minify == true);
         if (req.query.minify == '1') { minify = true; } else if (req.query.minify == '0') { minify = false; }
         xargs.min = minify ? '-min' : '';

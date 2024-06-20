@@ -25,6 +25,9 @@
             <div style="display:flex; align-items:center; gap:6px; margin-right:8px">
                 <p style="font-size: 16px; margin:0">(877) 822.5565 x 1</p>
                 <img height="32" src="images/wordpress-logo.png" />
+                <div id="saveButton" class="icon15 topButton" title="Save conversation" onclick="saveChatSession()"></div>
+                <div id="notifyButton" class="icon13 topButton" title="Enable browser notification" onclick="enableNotificationsButtonClick()"></div>
+                <div id="fileButton" class="icon4 topButton" title="Share a file" onclick="fileButtonClick()"></div>
             </div>
         </div>
         <div style="position:absolute;background-color:#036;right:0;height:38px">
@@ -48,7 +51,7 @@
         <table style="width:100%">
             <tr>
                 <td>
-                    <input id="xouttext" type="text" placeholder="Type your message here..."  style="box-sizing:border-box;width:100%;font-size:18px" onfocus=onUserInputFocus(1) onblur=onUserInputFocus(0) onkeyup="updateLocalOutText()" />
+                    <input id="xouttext" type="text" placeholder="Type here to chat"  style="box-sizing:border-box;width:100%;font-size:18px" onfocus=onUserInputFocus(1) onblur=onUserInputFocus(0) onkeyup="updateLocalOutText()" />
                 </td>
                 <td style="width:1px">
                     <input type="button" id="sendButton" value="Send" style="box-sizing: border-box;float:right;font-size:18px" onclick="xsend(event)" />
@@ -111,6 +114,8 @@
         var fileDownloads = {};
         var currentFileUpload = null;
         var currentFileDownload = null;
+        var userid = '{{{userid}}}';
+        var username ='{{{username}}}';
 
         function goBack() {
             history.back();
@@ -267,9 +272,12 @@
                 if (Notification) { QV('notifyButton', Notification.permission != 'granted'); }
             }
             var outtext = Q('xouttext').value;
+            var senderName = `Global IT - ${username}`;
+            var timestamp = new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + ', ' +
+                new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
             if (outtext.length > 0) {
                 chatTextSession += ((new Date()).toLocaleTimeString() + ' - ' + "Local" + '> ' + outtext + '\r\n');
-                QA('xmsg', '<div style="clear:both"><div class="localBubble">' + EscapeHtml(outtext) + '</div><div></div></div>');
+                QA('xmsg', '<div style="clear:both"><div class="localBubble"><small class="sender-name">' + senderName + '</small> <small class="timeStamp">' + timestamp + '</small><br>' + EscapeHtml(outtext) + '</div><div></div></div>');
                 Q('xmsgparent').scrollTop = Q('xmsgparent').scrollHeight;
                 if ((state == 2) || pushMessaging) { send({ action: 'chat', msg: outtext }); }
                 Q('xouttext').value = '';
