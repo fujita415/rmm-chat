@@ -15,16 +15,16 @@
     <script type="text/javascript" src="scripts/email.min.js"></script>
 </head>
 <body style="font-family:Arial,Helvetica,sans-serif">
-    <div id="xtop" style="position:absolute;left:0;right:0;top:0;height:50px;background-color:#036;color:#EEE;box-shadow:3px 3px 10px gray">
-        <div style="display: flex; align-items:center; justify-content: space-between">
+    <div id="xtop" style="position:absolute;left:0;right:0;top:0;height:38px;background-color:#036;color:#EEE;box-shadow:3px 3px 10px gray">
+        <div style="display: flex; align-items:center; justify-content: space-between; height: 100%">
             <div style="display:flex; align-items:center; gap:6px;">
                 <button style="padding:4px 4px 4px 10px; background-color:#036; color:#EEE; border:none; border-radius:5px; cursor:pointer; font-size:20px;" onclick="goBack()">&#8592;</button>
                 <img style="float:left" height="32" src="messenger.png" />
-                <p style="font-size:16px">Global IT - Messenger</p>
+                <p style="font-size:16px; margin:0">Global IT - Messenger</p>
             </div>
-            <div style="display:flex; align-items:center; gap:6px">
-                <p style="font-size: 12px;">(877) 822.5565 x 1</p>
-                <img height="32" src="https://globalit.com/wp-content/uploads/2018/06/wordpress-logo.png" />
+            <div style="display:flex; align-items:center; gap:6px; margin-right:8px">
+                <p style="font-size: 16px; margin:0">(877) 822.5565 x 1</p>
+                <img height="32" src="images/wordpress-logo.png" />
             </div>
         </div>
         <div style="position:absolute;background-color:#036;right:0;height:38px">
@@ -751,7 +751,6 @@ function processMessage(data, transport) {
         // This is the main start
         function start() {
             // Get started
-            QV('notifyButton', permission != 'granted');
             updateControls();
             if ((typeof args.id == 'string') && (args.id.length > 0)) {
                 var url = window.location.protocol.replace('http', 'ws') + '//' + window.location.host + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')) + '/meshrelay.ashx?id=' + args.id;
