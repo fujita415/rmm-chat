@@ -30,7 +30,7 @@
                 <div id="fileButton" class="icon4 topButton" title="Share a file" onclick="fileButtonClick()"></div>
             </div>
         </div>
-        <div style="position:absolute;background-color:#036;right:0;height:38px">
+        <!-- <div style="position:absolute;background-color:#036;right:0;height:38px">
             <div id="saveButton" class="icon15 topButton" style="margin-right:4px" title="Save conversation" onclick="saveChatSession()"></div>
             <div id="notifyButton" class="icon13 topButton" style="display:none" title="Enable browser notification" onclick="enableNotificationsButtonClick()"></div>
             <div id="fileButton" class="icon4 topButton" title="Share a file" style="display:none" onclick="fileButtonClick()"></div>
@@ -38,7 +38,7 @@
             <div id="micButton" class="icon6 topButton" title="Activate microphone" style="display:none" onclick="micButtonClick()"></div>
             <div id="hangupButton" class="icon11 topRedButton" title="Hang up" style="display:none" onclick="hangUpButtonClick(1)"></div>
             <div id="recordIcon" class='deskareaicon' title="Server is recording this session" style="background-color:red;margin:6px;margin-top:7px;border-radius:12px;height:24px;width:24px;float:right;display:none"></div>
-        </div>
+        </div> -->
         <div style="padding-top:9px;padding-left:6px;font-size:20px;display:inline-block"><b><span id="xtitle"></span></b></div>
     </div>
     <div id="xmiddle" style="position:absolute;left:0;right:0;top:38px;bottom:36px;font-size:18px">
@@ -293,7 +293,7 @@
             QE('sendButton', true);  // Always enable the send button
             QE('clearButton', true);  // Always enable the clear button
             QE('xouttext', true);     // Always enable the text input field
-            QV('fileButton', state == 2);  // Show file button only when connected
+          //  QV('fileButton', state == 2);  // Show file button only when connected
             QV('camButton', webchannel && webchannel.ok && !localStream && (userMediaSupport == 2));
             QV('micButton', webchannel && webchannel.ok && !localStream && (userMediaSupport > 0));
             QV('hangupButton', webchannel && webchannel.ok && localStream);
