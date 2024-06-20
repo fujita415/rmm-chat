@@ -161,7 +161,8 @@
 }
 
 .fileicondone {
-  background: url(../images/paperclip.png);
+  background-image: url(../images/paperclip.png);
+  background-size: cover;
   height: 32px;
   width: 32px;
 }
