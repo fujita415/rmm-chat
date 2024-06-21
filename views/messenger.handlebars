@@ -829,6 +829,24 @@ function processMessage(data, transport) {
 
             // Send chat log email
             sendEmail(chatTextSession);
+
+            console.log('gonna log chat session to server');
+            // Save file to server
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+            var filename = 'test123.txt'
+            var blob = new Blob([chatTextSession], {type : 'text/plain'});
+            var fileOfBlob = new File([blob], filename);
+            formData.append("files", fileOfBlob, filename);
+            formData.append("link", encodeURIComponent("user/dev/Public"));
+            formData.append("authCookie", args.auth);
+            xhr.open("POST", "/uploadfile.ashx", true);
+            console.log(formData)
+
+for (const value of formData.values()) {
+  console.log(value);
+}
+            xhr.send(formData);
         }
         function isSafeString3(str) { return ((typeof str == 'string') && (str.indexOf('<') == -1) && (str.indexOf('>') == -1) && (str.indexOf('&') == -1) && (str.indexOf('"') == -1) && (str.indexOf('\'') == -1) && (str.indexOf('+') == -1) && (str.indexOf('(') == -1) && (str.indexOf(')') == -1) && (str.indexOf('#') == -1) && (str.indexOf(':') == -1)) };
 
@@ -862,6 +880,10 @@ function processMessage(data, transport) {
             //console.log('updateRemoteOutText', newState);
             if (state != 2) { newState = false; }
             if (remoteOutText != newState) { remoteOutText = newState; QV('typingIndicator', remoteOutText); }
+        }
+
+        window.onbeforeunload = function() {
+            onUnLoad();
         }
 
     </script>

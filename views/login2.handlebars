@@ -54,13 +54,17 @@
     </style>
 </head>
 <body id="body" onload="if (typeof(startup) !== 'undefined') startup();" class="arg_hide login">
-    <div id="backgroundImage" style="position:absolute;left:0;bottom:0;z-index:-1;height:60%;width:100%;opacity:0.1;background-image:url('welcome.png');background-repeat:no-repeat;background-position:left bottom;background-size:contain"></div>
+    <div id="backgroundImage" style="position:absolute;left:0;bottom:0;z-index:-1;height:100%;width:100%;background-image:url('images/background.png');background-repeat:no-repeat;background-position:left bottom;background-size:cover"></div>
     <table id="centralTable" class="container" style="height:100%;z-index:1">
         <tr>
             <td id="logincell">
                 {{{titlehtml}}}
                 <img id="loginPicture" />
-                <div style="font-size:46px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;padding-bottom:10px;color:#c8c8c8;text-shadow: 2px 2px 2px #000;">Global IT<sup style="font-size:20px">Global IT</sup></div>
+                <div style="margin-bottom: 8px">
+                    <a href="https://globalit.com" target="_blank" rel="noreferrer">
+                        <img src="images/gitlogo.png" />
+                    </a>
+                </div>
                 <div id=loginpanel style="display:none;box-shadow:1px 1px 4px #000">
                     <form id=loginpanelform method=post>
                         <input type=hidden name=action value=login />
