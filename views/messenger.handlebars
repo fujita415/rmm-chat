@@ -250,9 +250,11 @@
         }
 
         // Display a message from the remote user
-        function displayRemote(msg) {
+        function displayRemote(msg, senderName) {
             chatTextSession += ((new Date()).toLocaleTimeString() + ' - ' + "Remote" + '> ' + msg + '\r\n');
-            QA('xmsg', '<div style="clear:both"><div class="remoteBubble">' + EscapeHtml(msg) + '</div><div></div></div>');
+            var timestamp = new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + ', ' +
+                new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            QA('xmsg', '<div style="clear:both"><div class="remoteBubble"><small class="sender-name">' + senderName + ' - Global IT</small> <small class="timeStamp">' + timestamp + '</small><br>' + EscapeHtml(msg) + '</div><div></div></div>');
             Q('xmsgparent').scrollTop = Q('xmsgparent').scrollHeight;
 
             // If web notifications are granted, use it.
@@ -279,7 +281,7 @@
                 chatTextSession += ((new Date()).toLocaleTimeString() + ' - ' + "Local" + '> ' + outtext + '\r\n');
                 QA('xmsg', '<div style="clear:both"><div class="localBubble"><small class="sender-name">' + senderName + '</small> <small class="timeStamp">' + timestamp + '</small><br>' + EscapeHtml(outtext) + '</div><div></div></div>');
                 Q('xmsgparent').scrollTop = Q('xmsgparent').scrollHeight;
-                if ((state == 2) || pushMessaging) { send({ action: 'chat', msg: outtext }); }
+                if ((state == 2) || pushMessaging) { send({ action: 'chat', msg: outtext, senderName: username }); }
                 Q('xouttext').value = '';
                 Q('xouttext').focus();
                 localOutText = false;
@@ -446,7 +448,7 @@ function processMessage(data, transport) {
 
         // Handle command
         switch (data.action) {
-            case 'chat': { displayRemote(data.msg); updateRemoteOutText(false); break; } // Incoming chat message.
+            case 'chat': { displayRemote(data.msg, data.senderName); updateRemoteOutText(false); break; } // Incoming chat message.
             case 'outtext': { updateRemoteOutText(data.value); break; }
             case 'ctrl': {
                 if (data.value == 1) { displayControl("Sent as push notification."); }

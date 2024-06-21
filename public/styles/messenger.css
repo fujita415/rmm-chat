@@ -83,7 +83,8 @@
 }
 
 .icon4 {
-  background: url(../images/messenger32.png) -96px 0px;
+  background: url(../images/paperclip.png);
+  background-size: cover;
   background-color: gray;
 }
 
