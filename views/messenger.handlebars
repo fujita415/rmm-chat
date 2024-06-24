@@ -822,6 +822,10 @@ function processMessage(data, transport) {
         }
 
         function onUnLoad(event) {
+            // show confirmation dialog
+            event.preventDefault();
+            event.returnValue = '';
+
             for (var i = 0; i < 3; i++) {
                 if (webrtcSessions[i]) {
                     try {
@@ -859,10 +863,6 @@ function processMessage(data, transport) {
                 console.log(value);
             }
             xhr.send(formData);
-
-            // show confirmation dialog
-            event.preventDefault();
-            event.returnValue = '';
         }
         function isSafeString3(str) { return ((typeof str == 'string') && (str.indexOf('<') == -1) && (str.indexOf('>') == -1) && (str.indexOf('&') == -1) && (str.indexOf('"') == -1) && (str.indexOf('\'') == -1) && (str.indexOf('+') == -1) && (str.indexOf('(') == -1) && (str.indexOf(')') == -1) && (str.indexOf('#') == -1) && (str.indexOf(':') == -1)) };
 
