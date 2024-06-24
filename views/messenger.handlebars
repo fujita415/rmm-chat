@@ -812,10 +812,10 @@ function processMessage(data, transport) {
                 chat_log: chatLog,
             }).then(
                 (response) => {
-                    console.log('SUCCESS!', response.status, response.text);
+                    console.log('Sent log email!', response.status, response.text);
                 },
                 (error) => {
-                    console.log('FAILED...', error);
+                    console.log('Did not sent log email', error);
                 },
             );
         }
