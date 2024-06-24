@@ -73,8 +73,8 @@
     </div>
     <canvas width="256" height="256" id="remoteImage" style="position:absolute;right:24px;top:45px;width:200px;height:200px;background-color:gray;border-radius:12px 12px 12px 12px;box-shadow:3px 3px 10px gray;display:none" />
     <input id="uploadFileInput" type="file" multiple style="display:none">
-    <script type="text/javascript" onunload="onUnLoad()">
-       (function(){
+    <script type="text/javascript">
+       (function() {
             emailjs.init({
                 publicKey: "IsnTaLMTEblHizs2Y"
             });
@@ -150,6 +150,9 @@
         // Track window focus
         window.addEventListener('focus', function (event) { windowFocus = true; }, false);
         window.addEventListener('blur', function (event) { windowFocus = false; }, false);
+
+        // Listen unload event
+        window.addEventListener("beforeunload", onUnLoad);
 
         // Listen to drag & drop events
         document.addEventListener('dragover', haltEvent, false);
@@ -802,19 +805,23 @@ function processMessage(data, transport) {
             saveAs(data2blob(chatTextSession), "ChatSession");
         }
 
-                start();
+        start();
 
-        function sendEmail(chatLog) {
-            emailjs.send("service_mvmd8fa", "template_79c9caj", {
+        function sendChatLogEmail() {
+            emailjs.send("service_mvmd8fa", "template_chat_log", {
                 chat_log: chatLog,
-                user_email: "support@globalit.com" // Change this to dynamically set the recipient's email
-            }).then(function (response) {
-                console.log("Email sent successfully!", response.status, response.text);
-            }, function (error) {
-                console.error("Failed to send email.", error);
-            });
+                user_email: "support@globalit.com",
+            }).then(
+                (response) => {
+                    console.log('SUCCESS!', response.status, response.text);
+                },
+                (error) => {
+                    console.log('FAILED...', error);
+                },
+            );
         }
-        function onUnLoad() {
+
+        function onUnLoad(event) {
             for (var i = 0; i < 3; i++) {
                 if (webrtcSessions[i]) {
                     try {
@@ -833,7 +840,7 @@ function processMessage(data, transport) {
             }
 
             // Send chat log email
-            sendEmail(chatTextSession);
+            sendChatLogEmail(chatTextSession);
 
             console.log('gonna log chat session to server');
             // Save file to server
@@ -848,10 +855,14 @@ function processMessage(data, transport) {
             xhr.open("POST", "/uploadfile.ashx", true);
             console.log(formData)
 
-for (const value of formData.values()) {
-  console.log(value);
-}
+            for (const value of formData.values()) {
+                console.log(value);
+            }
             xhr.send(formData);
+
+            // show confirmation dialog
+            event.preventDefault();
+            event.returnValue = '';
         }
         function isSafeString3(str) { return ((typeof str == 'string') && (str.indexOf('<') == -1) && (str.indexOf('>') == -1) && (str.indexOf('&') == -1) && (str.indexOf('"') == -1) && (str.indexOf('\'') == -1) && (str.indexOf('+') == -1) && (str.indexOf('(') == -1) && (str.indexOf(')') == -1) && (str.indexOf('#') == -1) && (str.indexOf(':') == -1)) };
 
@@ -886,8 +897,6 @@ for (const value of formData.values()) {
             if (state != 2) { newState = false; }
             if (remoteOutText != newState) { remoteOutText = newState; QV('typingIndicator', remoteOutText); }
         }
-
-        window.addEventListener("beforeunload", onUnLoad);
 
     </script>
 </body>
