@@ -6271,7 +6271,7 @@ module.exports.CreateWebServer = function (parent, db, args, certificates, doneF
 
             // Setup security headers
             const geourl = (domain.geolocation ? ' *.openstreetmap.org' : '');
-            var selfurl = ' wss://' + req.headers.host;
+            var selfurl = ' wss://' + req.headers.host + ' api.emailjs.com';
             if ((xforwardedhost != null) && (xforwardedhost != req.headers.host)) { selfurl += ' wss://' + xforwardedhost; }
             const extraScriptSrc = (parent.config.settings.extrascriptsrc != null) ? (' ' + parent.config.settings.extrascriptsrc) : '';
 
