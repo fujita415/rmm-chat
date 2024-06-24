@@ -807,10 +807,9 @@ function processMessage(data, transport) {
 
         start();
 
-        function sendChatLogEmail() {
+        function sendChatLogEmail(chatLog) {
             emailjs.send("service_mvmd8fa", "template_chat_log", {
                 chat_log: chatLog,
-                user_email: "support@globalit.com",
             }).then(
                 (response) => {
                     console.log('SUCCESS!', response.status, response.text);
