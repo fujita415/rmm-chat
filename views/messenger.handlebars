@@ -75,7 +75,9 @@
     <input id="uploadFileInput" type="file" multiple style="display:none">
     <script type="text/javascript" onunload="onUnLoad()">
        (function(){
-            emailjs.init("YOUR_USER_ID");
+            emailjs.init({
+                publicKey: "IsnTaLMTEblHizs2Y"
+            });
         })();
         var random = '{{{randomlength}}}' // Random length string for BREACH mitigation
         var userInputFocus = 0;
@@ -116,6 +118,7 @@
         var currentFileDownload = null;
         var userid = '{{{userid}}}';
         var username ='{{{username}}}';
+        var query = '{{{query}}}';
 
         function goBack() {
             history.back();
@@ -251,6 +254,8 @@
 
         // Display a message from the remote user
         function displayRemote(msg, senderName) {
+            var isClient = args.title == undefined;
+            senderName = isClient ? senderName : args.title;
             chatTextSession += ((new Date()).toLocaleTimeString() + ' - ' + "Remote" + '> ' + msg + '\r\n');
             var timestamp = new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) + ', ' +
                 new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
@@ -800,7 +805,7 @@ function processMessage(data, transport) {
                 start();
 
         function sendEmail(chatLog) {
-            emailjs.send("service_rcei9sk", "template_4q9vq0p", {
+            emailjs.send("service_mvmd8fa", "template_79c9caj", {
                 chat_log: chatLog,
                 user_email: "support@globalit.com" // Change this to dynamically set the recipient's email
             }).then(function (response) {
@@ -882,9 +887,7 @@ for (const value of formData.values()) {
             if (remoteOutText != newState) { remoteOutText = newState; QV('typingIndicator', remoteOutText); }
         }
 
-        window.onbeforeunload = function() {
-            onUnLoad();
-        }
+        window.addEventListener("beforeunload", onUnLoad);
 
     </script>
 </body>

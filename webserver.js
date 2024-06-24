@@ -3422,7 +3422,7 @@ module.exports.CreateWebServer = function (parent, db, args, certificates, doneF
     }
 
     // Serve the xterm page
-    function handleXTermRequest(req, res) {
+    function handleXTermRequest(req, res) { 
         const domain = checkUserIpAddress(req, res);
         if (domain == null) { return; }
         if ((domain.loginkey != null) && (domain.loginkey.indexOf(req.query.key) == -1)) { res.sendStatus(404); return; } // Check 3FA URL key
@@ -8499,6 +8499,7 @@ module.exports.CreateWebServer = function (parent, db, args, certificates, doneF
         var user = obj.users[req.session.userid];
         xargs.userid = req.session.userid;
         xargs.username = user ? user.name : 'anonymous';
+        xargs.query = JSON.stringify(req.query);
         var minify = (domain.minify == true);
         if (req.query.minify == '1') { minify = true; } else if (req.query.minify == '0') { minify = false; }
         xargs.min = minify ? '-min' : '';
