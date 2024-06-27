@@ -613,6 +613,8 @@
                     </div>
                 </div>
             </div>
+
+
             <div id=p10 style="display:none">
                 <div id=p10title>
                     <div id="p10BackButton"><div class="backButton" tabindex=0 onclick=goBack() title="Back" onkeypress="if (event.key == 'Enter') goBack()"><div class="backButtonEx"></div></div></div>
@@ -656,6 +658,7 @@
                     <div id=p10html5></div>
                 </div>
             </div>
+            
             <div id=p11 class="noselect" style="display:none">
                 <div id="p11title">
                     <div id=p11deviceNameHeader>
@@ -848,8 +851,10 @@
                     <h1>Timeline - <span id=p18deviceName></span></h1>
                 </div>
                 <div id=p18events style="overflow-y:auto">
+                    
                 </div>
             </div>
+
             <div id=p180 style="display: none">
                 <div id="p180title">
                     <div id="p180BackButton" style="float:left"><div class="backButton" tabindex=0 onclick=goBack() title="Back" onkeypress="if (event.key == 'Enter') goBack()"><div class="backButtonEx"></div></div></div>
@@ -859,6 +864,7 @@
                     p180 - history content
                 </div>
             </div>
+
             <div id=p13 style="display:none">
                 <div id="p13title">
                     <div id="p13BackButton" style="float:left"><div class="backButton" tabindex=0 onclick=goBack() title="Back" onkeypress="if (event.key == 'Enter') goBack()"><div class="backButtonEx"></div></div></div>
@@ -2292,6 +2298,8 @@
             updateNaggleFlags |= flags;
             if (updateNaggleTimer == null) {
                 updateNaggleTimer = setTimeout(function () {
+          
+
                     if (updateNaggleFlags & 512) { center(); }
                     if (updateNaggleFlags & 1) { onSearchInputChanged(); }
                     if (updateNaggleFlags & 2) { onSortSelectChange(false); }
@@ -2410,7 +2418,7 @@
                 }
             }
         }
-
+{{!-- allcase --}}
         function onMessage(server, message) {
             switch (message.action) {
                 case 'trace': {
@@ -2528,18 +2536,22 @@
                     }
                     break;
                 }
-                case 'userinfo': {
+                case 'userinfo': { 
                     userinfo = message.userinfo;
                     updateSiteAdmin();
                     updateSelf();
                     break;
-                }
+                }  
                 case 'users': {
                     users = {};
                     for (var m in message.users) { users[message.users[m]._id] = message.users[m]; }
                     if (currentUser != null) { currentUser = users[currentUser._id]; }
+                
                     mainUpdate(16384);
+
                     updateSelf();
+                    
+                  
                     break;
                 }
                 case 'wssessioncount': {
@@ -2556,6 +2568,7 @@
                 }
                 case 'usergroups': {
                     var groupCount = 0;
+                    
                     if (Array.isArray(message.ugroups)) {
                         usergroups = {};
                         for (var i in message.ugroups) {  groupCount++; usergroups[message.ugroups[i]._id] = message.ugroups[i]; }
@@ -2637,6 +2650,7 @@
                     } else {
                         updateDeviceDetails(getNodeFromId(message.nodeid), message.hardware);
                     }
+
                     break;
                 }
                 case 'lastconnect': {
@@ -2898,6 +2912,7 @@
                     break;
                 }
                 case 'events': {
+                    {{!-- clue-1 --}}
                     if ((message.nodeid != null) && (currentNode != null) && (message.nodeid == currentNode._id)) {
                         currentDeviceEvents = message.events;
                         mainUpdate(1024);
@@ -2907,7 +2922,7 @@
                     } else {
                         events = message.events;
                         mainUpdate(32);
-                        mainUpdate(130172);
+                        mainUpdate(131072);
                     }
                     break;
                 }
@@ -7855,6 +7870,7 @@
                 // Request device sharing
                 if ((deviceSharesNode != currentNode._id) && (deviceSharesReq != currentNode._id)) {
                     deviceSharesReq = currentNode._id;
+                    
                     meshserver.send({ action: 'deviceShares', nodeid: currentNode._id });
                 }
 
@@ -7939,6 +7955,7 @@
 
                 // Show device shares
                 if ((deviceShares != null) && (deviceSharesNode == currentNode._id) && (deviceShares.length > 0)) {
+
                     x += '<br /><table style="color:black;background-color:#EEE;border-color:#AAA;border-width:1px;border-style:solid;border-collapse:collapse" border=0 cellpadding=2 cellspacing=0 width=100%><tbody><tr style=background-color:#AAAAAA;font-weight:bold><th scope=col style=text-align:left;width:430px>' + "Active Device Sharing" + '</th><th scope=col style=text-align:left></th></tr>';
                     count = 1;
                     for (var i = 0; i < deviceShares.length; i++) {
@@ -18448,6 +18465,7 @@
         }
 
         function go(x, event) {
+           
             if(event && ((event.which == 3) || (event.button == 2))) return; // ignore right clicks as they are handled elsewhere
             // Remind the user to add two factor authentication
             if ((features & 0x00040000) && (count2factoraAuths() == 0) && (x > 2)) { x = 2; setDialogMode(2, "Account Security", 1, null, "Unable to access this feature until two-factor authentication is enabled. This is required for extra security. Go to the \"My Account\" tab and look at the \"Account Security\" section."); }
@@ -18505,6 +18523,7 @@
             if (((features & 0x10000000) == 0) && (xxcurrentView > 0)) {
                 var urlviewmode = '';
                 if ((xxcurrentView >= 10) && (xxcurrentView <= 19 || (xxcurrentView == 180))) { // Device Link
+              
                     if (currentNode != null) { urlviewmode = '?viewmode=' + xxcurrentView + '&gotonode=' + currentNode._id.split('/')[2]; }
                 } else if ((xxcurrentView >= 20) && (xxcurrentView <= 29)) { // Device Group Link
                     if (currentMesh != null) { urlviewmode = '?viewmode=' + xxcurrentView + '&gotomesh=' + currentMesh._id.split('/')[2]; }
@@ -18540,6 +18559,7 @@
 
             // My Devices
             if (x == 1 || (backView == 1) || ((backView == 0) && (x >= 10 && x < 20 || x == 180))) {
+               
                 QC('MainMenuMyDevices').add(mainMenuActiveClass);
                 QC('LeftMenuMyDevices').add(leftMenuActiveClass);
             } else if (x == 2 || (backView == 2) || ((backView == 0) && (x >= 20 && x < 30))) {
@@ -18547,6 +18567,7 @@
                 QC('MainMenuMyAccount').add(mainMenuActiveClass);
                 QC('LeftMenuMyAccount').add(leftMenuActiveClass);
             } else if ((x == 3) || (x == 60)) {
+               
                 // My Events
                 QC('MainMenuMyEvents').add(mainMenuActiveClass);
                 QC('LeftMenuMyEvents').add(leftMenuActiveClass);
@@ -18641,8 +18662,45 @@
             meshserver.send({ action: 'events', source: 'timeline' });
         }
         function updateTimelineEvents() {
-            console.log(events);
+            var windowHeight = window.innerHeight; 
+var maxHeight = windowHeight - 210; 
+            
+            var x = '';
+            x += '<style>';
+            x += '.table-container { max-height: ' + maxHeight + 'px; overflow-y: auto; }';
+            x += 'table { width: 80%;  }';
+            x += 'th { background-color: #003366; color: white; }';
+            x += 'tr:nth-child(even) { background-color: #f2f2f2; }';
+            x += '</style>';
+            x += '<div class="table-container">';
+            x += '<br /><table>';
+            x += '<thead><tr>';
+            x += '<th>userId</th>';
+            x += '<th>public IP</th>';
+            x += '<th>time</th>';
+            x += '</tr></thead>';
+            x += '<tbody>';
+            const filteredData = events.filter(record => record.etype === 'user' && record.action === 'login');
+            const uniqueData = Array.from(new Map(filteredData.map(item => [item.userid, item])).values());
+
+
+          if(uniqueData.length>0){
+              for (var i = 0; i < uniqueData.length; i++) {
+                var row = uniqueData[i];
+                x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
+                x += '<td>' + row.userid + '</td>';
+                x += '<td>' + row.ip + '</td>';
+                x += '<td>' + new Date(row.time).toLocaleString() + '</td>';
+                x += '</tr>';
+            }
+          }
+
+            x += '</tbody></table>';
+            x += '</div>';
+        
+            QH('p18events', x);
         }
+
 
         function updatePluginList(versInfo) {
             if (pluginHandler == null) return;
