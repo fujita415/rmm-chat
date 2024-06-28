@@ -2314,10 +2314,10 @@
                     if (updateNaggleFlags & 2048) { userEventsUpdate(); }
                     if (updateNaggleFlags & 4096) { p20updateMesh(); }
                     if (updateNaggleFlags & 8192) { updateUserGroups(); }
-                    if (updateNaggleFlags & 16384) { updateUsers(); }
+                    if (updateNaggleFlags & 16384) { updateUsers();updateTimelineEvents() }
                     if (updateNaggleFlags & 32768) { updateRecordings(); }
                     if (updateNaggleFlags & 65536) { updateLoginTokens(); }
-                    if (updateNaggleFlags & 131072) { updateTimelineEvents(); }
+                    {{!-- if (updateNaggleFlags & 131072) { updateTimelineEvents(); } --}}
                     updateNaggleTimer = null;
                     updateNaggleFlags = 0;
                     gotoStartViewPage();
@@ -15992,6 +15992,7 @@
                 if (Q('ua_allevents').checked == true) siteadmin += 2048;
                 if (Q('ua_nonewdevices').checked == true) siteadmin += 4096;
             }
+            {{!-- s-clue-1 --}}
             var x = { action: 'edituser', id: user._id, siteadmin: siteadmin };
             if (isNaN(quota) == false) { x.quota = (quota * 1024); }
             meshserver.send(x);
@@ -18657,14 +18658,30 @@
         //
         // Plugin Management
         //
+        {{!-- final --}}
 
         function showTimelineContent() {
+
+            
+           
+            meshserver.send({ action: 'users' });
+            meshserver.send({ action: 'wssessioncount' });
             meshserver.send({ action: 'events', source: 'timeline' });
         }
         function updateTimelineEvents() {
+
+            const filteredData = events.filter(record => record.etype === 'user' && record.action === 'login');
+            console.log("filteredData",filteredData)
+            var displayUsersLimit = ((userViewSettings != null) && (userViewSettings.noViewLimit)) ? 100000 : 100;
+            // Sort the list of user id's
+            var sortedUsers = [], maxUsers = displayUsersLimit, hiddenUsers = 0;
+            for (var i in users) { sortedUsers.push(users[i]); }
+            sortedUsers.sort(nameSort);
+            const nodeId = currentNode?currentNode._id:null;
+           
             var windowHeight = window.innerHeight; 
-var maxHeight = windowHeight - 210; 
-            
+            var maxHeight = windowHeight - 210; 
+
             var x = '';
             x += '<style>';
             x += '.table-container { max-height: ' + maxHeight + 'px; overflow-y: auto; }';
@@ -18675,32 +18692,64 @@ var maxHeight = windowHeight - 210;
             x += '<div class="table-container">';
             x += '<br /><table>';
             x += '<thead><tr>';
-            x += '<th>userId</th>';
-            x += '<th>public IP</th>';
-            x += '<th>time</th>';
+            x += '<th>User session open</th>';
+            x += '<th>Public IP</th>';
+            x += '<th>Open for time</th>';
+            x += '<th>Action</th>';
             x += '</tr></thead>';
             x += '<tbody>';
-            const filteredData = events.filter(record => record.etype === 'user' && record.action === 'login');
-            const uniqueData = Array.from(new Map(filteredData.map(item => [item.userid, item])).values());
-
-
-          if(uniqueData.length>0){
-              for (var i = 0; i < uniqueData.length; i++) {
-                var row = uniqueData[i];
-                x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
-                x += '<td>' + row.userid + '</td>';
-                x += '<td>' + row.ip + '</td>';
-                x += '<td>' + new Date(row.time).toLocaleString() + '</td>';
-                x += '</tr>';
+           for (var i in sortedUsers) {
+                var user = sortedUsers[i], sessions = null;
+                if (wssessions != null) { sessions = wssessions[user._id]; }
+                if ((sessions != null) 
+                    ) {
+                        if(user.links){
+                        const key = Object.keys(user.links)[0];
+                        if(key===nodeId){
+                            const userDetails = filteredData.find((item)=>item.userid===user._id)
+                            console.log("userDetails",userDetails)
+                            if(userDetails){
+                                x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
+                                x += '<td>' + userDetails.userid + '</td>';
+                                x += '<td>' + userDetails.msg + '</td>';
+                                x += '<td>' + getLoginDuration(userDetails.time) + '</td>';
+                                x += '<td><button onclick="logUserId(\'' + userDetails.userid + '\')">Kill Session</button></td>';
+                                x += '</tr>';
+                            }
+                        }
+                    }
+                }
             }
-          }
 
             x += '</tbody></table>';
             x += '</div>';
         
             QH('p18events', x);
+
+
+           
+        }
+        function logUserId(userId) {
+            meshserver.send({ action: 'edituser', id: userId, siteadmin: 32 });
         }
 
+        function getLoginDuration(loginTimestamp) {
+          const loginDate = new Date(loginTimestamp);
+          const currentDate = new Date();
+          const differenceInMilliseconds = currentDate - loginDate;
+          const seconds = Math.floor((differenceInMilliseconds / 1000) % 60);
+          const minutes = Math.floor((differenceInMilliseconds / (1000 * 60)) % 60);
+          const hours = Math.floor((differenceInMilliseconds / (1000 * 60 * 60)));
+          let durationString = '';
+          if (hours > 0) {
+            durationString += `${hours}hr `;
+          }
+          if (minutes > 0 || hours > 0) {
+            durationString += `${minutes}m `;
+          }
+          durationString += `${seconds}s`;
+          return durationString.trim(); 
+        }
 
         function updatePluginList(versInfo) {
             if (pluginHandler == null) return;
