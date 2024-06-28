@@ -18677,7 +18677,9 @@
             var sortedUsers = [], maxUsers = displayUsersLimit, hiddenUsers = 0;
             for (var i in users) { sortedUsers.push(users[i]); }
             sortedUsers.sort(nameSort);
+            console.log("sortedUsers",sortedUsers)
             const nodeId = currentNode?currentNode._id:null;
+            console.log("nodeId",nodeId)
            
             var windowHeight = window.innerHeight; 
             var maxHeight = windowHeight - 210; 
@@ -18700,12 +18702,18 @@
             x += '<tbody>';
            for (var i in sortedUsers) {
                 var user = sortedUsers[i], sessions = null;
+                console.log("in sorted array",user)
                 if (wssessions != null) { sessions = wssessions[user._id]; }
-                if ((sessions != null) 
-                    ) {
+                console.log("after 1st if ",sessions)
+                console.log("after 1st if wssessions ",wssessions)
+                if ((sessions != null)) {
+                    console.log("in 2nd if ",sessions)
                         if(user.links){
+                            console.log("in links")
                         const key = Object.keys(user.links)[0];
+                        console.log("key",key)
                         if(key===nodeId){
+                            console.log("final",user)
                             const userDetails = filteredData.find((item)=>item.userid===user._id)
                             console.log("userDetails",userDetails)
                             if(userDetails){
