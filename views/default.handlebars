@@ -18661,9 +18661,6 @@
         {{!-- final --}}
 
         function showTimelineContent() {
-
-            
-           
             meshserver.send({ action: 'users' });
             meshserver.send({ action: 'wssessioncount' });
             meshserver.send({ action: 'events', source: 'timeline' });
@@ -18708,11 +18705,10 @@
                 console.log("after 1st if wssessions ",wssessions)
                 if ((sessions != null)) {
                     console.log("in 2nd if ",sessions)
-                        if(user.links){
-                            console.log("in links")
-                        const key = Object.keys(user.links)[0];
-                        console.log("key",key)
-                        if(key===nodeId){
+                    if(user?.links){
+                        console.log("in links")
+                        const nodeKeys = Object.keys(user.links)?.filter(key => key.startsWith("node//"));
+                        if(nodeKeys.includes(nodeId)){
                             console.log("final",user)
                             const userDetails = filteredData.find((item)=>item.userid===user._id)
                             console.log("userDetails",userDetails)
