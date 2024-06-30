@@ -2737,6 +2737,7 @@
                                     if ((typeof message.value == 'object') && (Object.keys(message.value).length > 0)) {
                                         // lets fix agent psinfo not being camelcase
                                         message.value = jsonToCamel(message.value);
+                                        console.log("message",message.value)
                                         if(!message.value.cmd && message.value.path){ message.value.cmd = message.value.path }
                                         if(!message.value.processUser && message.value.userName){ message.value.processUser = message.value.userName.split("\\")[1]; }
                                         if(!message.value.processDomain && message.value.userName){ message.value.processDomain = message.value.userName.split("\\")[0]; }                                    
@@ -4988,6 +4989,7 @@
                     x += '<u>' + "Remote Desktop" + '</u>';
                     for (var j in node.sessions.kvm) {
                         if (j.startsWith('user/')) {
+                       
                             var trash = '';
                             if (((j == userinfo._id) || (GetNodeRights(node) == 0xFFFFFFFF))) { trash = ' <a href=# onclick=\'return endDeviceSession("kvm", "' + encodeURIComponentEx(node._id) + '", "' + encodeURIComponentEx(j) + '")\' title="' + "Disconnect this session" + '" style=cursor:pointer><img src=images/trash.png border=0 height=10 width=10></a>'; }
                             x += addHtmlValue2(getUserName(j), ((node.sessions.kvm[j] == 1)?"1 session":nobreak(format("{0} sessions", node.sessions.kvm[j]))) + trash);
@@ -7828,8 +7830,8 @@
                     && ((meshrights & 8) || (meshrights & 256)))
                     );
                 QV('MainDevTerminal', (((node.agent == null) && (node.intelamt != null)) || ((node.agent) && (node.agent.caps == null)) || ((node.agent) && ((node.agent.caps & 2) != 0)) || (node.intelamt && (node.intelamt.state == 2))) && (meshrights & 8) && terminalAccess);
-                QV('MainDevTimeline', (node.agent != null) && (node.agent.caps != null) && ((node.agent.caps & 4) != 0) && (meshrights & 8));
-                QV('MainDevHistory', (node.agent != null) && (node.agent.caps != null) && ((node.agent.caps & 4) != 0) && (meshrights & 8));
+                QV('MainDevTimeline', (node.agent != null) && (node.agent.caps != null) && ((node.agent.caps & 4) != 0) && (meshrights & 8)&&(userinfo.siteadmin!==0));
+                QV('MainDevHistory', (node.agent != null) && (node.agent.caps != null) && ((node.agent.caps & 4) != 0) && (meshrights & 8)&&(userinfo.siteadmin!==0));
                 QV('MainDevFiles', (node.agent != null) && (node.agent.caps != null) && ((node.agent.caps & 4) != 0) && (meshrights & 8) && fileAccess);
                 QV('MainDevInfo', (node.mtype < 3) && ((meshrights & 1048576) != 0));
                 QV('MainDevAmt', (node.intelamt != null) && ((node.intelamt.state == 2) || (node.conn & 2)) && (meshrights & 8) && amtAccess);
@@ -9337,6 +9339,7 @@
                     }
                 }
             } else {
+                {{!-- mdis --}}
                 // Disconnect and clean up the remote desktop
                 desktop.Stop();
                 webRtcDesktopReset();
@@ -18661,13 +18664,15 @@
         {{!-- final --}}
 
         function showTimelineContent() {
+           
             meshserver.send({ action: 'users' });
             meshserver.send({ action: 'wssessioncount' });
             meshserver.send({ action: 'events', source: 'timeline' });
         }
         function updateTimelineEvents() {
 
-            const filteredData = events.filter(record => record.etype === 'user' && record.action === 'login');
+
+            const filteredData = events.filter(record =>  record.etype === 'relay');
             console.log("filteredData",filteredData)
             var displayUsersLimit = ((userViewSettings != null) && (userViewSettings.noViewLimit)) ? 100000 : 100;
             // Sort the list of user id's
@@ -18709,17 +18714,39 @@
                         console.log("in links")
                         const nodeKeys = Object.keys(user.links)?.filter(key => key.startsWith("node//"));
                         if(nodeKeys.includes(nodeId)){
-                            console.log("final",user)
-                            const userDetails = filteredData.find((item)=>item.userid===user._id)
-                            console.log("userDetails",userDetails)
-                            if(userDetails){
-                                x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
-                                x += '<td>' + userDetails.userid + '</td>';
-                                x += '<td>' + userDetails.msg + '</td>';
-                                x += '<td>' + getLoginDuration(userDetails.time) + '</td>';
-                                x += '<td><button onclick="logUserId(\'' + userDetails.userid + '\')">Kill Session</button></td>';
-                                x += '</tr>';
+
+                            console.log("final",user);
+                            const userDetails = filteredData.filter((item)=>item.userid===user._id&&item.nodeId===nodeId);
+                            const userDisktopSession = filteredData.filter((item)=>item.userid===user._id&&item.msg.includes("desktop session"))
+                            const userTerminalSession = filteredData.filter((item)=>item.userid===user._id&&item.msg.includes("terminal session"))
+                            console.log("userDisktopSession",userDisktopSession);
+                            console.log("userTerminalSession",userTerminalSession);
+                            if(userDisktopSession.length>0){
+                            const latestUserDisktopSession = userDisktopSession[0]
+                                if(latestUserDisktopSession&&latestUserDisktopSession.msg.startsWith("Started")){
+                                    x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
+                                    x += '<td>' + latestUserDisktopSession.userid + '</td>';
+                                    x += '<td>' + "Started desktop session from " + latestUserDisktopSession.msgArgs[1] + " to " + latestUserDisktopSession.msgArgs[2] + '</td>';
+                                    x += '<td>' + getLoginDuration(latestUserDisktopSession.time) + '</td>';
+                                    x += '<td>' + '<a href=# onclick=\'return endDeviceSession("kvm", "' + encodeURIComponentEx(latestUserDisktopSession.nodeid) + '", "' + encodeURIComponentEx(latestUserDisktopSession.userid) + '")\' title="' + "Disconnect this session" + '" style=cursor:pointer> <button onclick="refresh()">Kill Session</button></a>' + '</td>';
+                                
+                                    x += '</tr>';
+                                }
                             }
+
+                            if(userTerminalSession.length>0){
+                            const latestUserTerminalSession = userTerminalSession[0]
+                                if(latestUserTerminalSession&&latestUserTerminalSession.msg.startsWith("Started")){
+                                    x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
+                                    x += '<td>' + latestUserTerminalSession.userid + '</td>';
+                                    x += '<td>' + "Started terminal session from " + latestUserTerminalSession.msgArgs[1] + " to " + latestUserTerminalSession.msgArgs[2] + '</td>';
+                                    x += '<td>' + getLoginDuration(latestUserTerminalSession.time) + '</td>';
+                                    x += '<td>' + '<a href=# onclick=\'return endDeviceSession("terminal", "' + encodeURIComponentEx(latestUserTerminalSession.nodeid) + '", "' + encodeURIComponentEx(latestUserTerminalSession.userid) + '")\' title="' + "Disconnect this session" + '" style=cursor:pointer> <button onclick="refresh()">Kill Session</button></a>' + '</td>';
+                                
+                                    x += '</tr>';
+                                }
+                            }
+                            
                         }
                     }
                 }
@@ -18733,8 +18760,8 @@
 
            
         }
-        function logUserId(userId) {
-            meshserver.send({ action: 'edituser', id: userId, siteadmin: 32 });
+        function refresh() {
+            showTimelineContent()
         }
 
         function getLoginDuration(loginTimestamp) {
