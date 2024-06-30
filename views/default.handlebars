@@ -18716,9 +18716,10 @@
                         if(nodeKeys.includes(nodeId)){
 
                             console.log("final",user);
-                            const userDetails = filteredData.filter((item)=>item.userid===user._id&&item.nodeId===nodeId);
-                            const userDisktopSession = filteredData.filter((item)=>item.userid===user._id&&item.msg.includes("desktop session"))
-                            const userTerminalSession = filteredData.filter((item)=>item.userid===user._id&&item.msg.includes("terminal session"))
+                            const userEventDetails = filteredData.filter((item)=>item.userid===user._id&&item.nodeid===nodeId);
+                            console.log("userEventDetails",userEventDetails)
+                            const userDisktopSession = userEventDetails.filter((item)=>item.userid===user._id&&item.msg.includes("desktop session"))
+                            const userTerminalSession = userEventDetails.filter((item)=>item.userid===user._id&&item.msg.includes("terminal session"))
                             console.log("userDisktopSession",userDisktopSession);
                             console.log("userTerminalSession",userTerminalSession);
                             if(userDisktopSession.length>0){
