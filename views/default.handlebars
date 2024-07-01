@@ -18669,6 +18669,7 @@
             meshserver.send({ action: 'wssessioncount' });
             meshserver.send({ action: 'events', source: 'timeline' });
         }
+
         function updateTimelineEvents() {
 
 
@@ -18682,6 +18683,8 @@
             console.log("sortedUsers",sortedUsers)
             const nodeId = currentNode?currentNode._id:null;
             console.log("nodeId",nodeId)
+
+            const userinfos = [];
            
             var windowHeight = window.innerHeight; 
             var maxHeight = windowHeight - 210; 
@@ -18723,13 +18726,37 @@
                             console.log("userDisktopSession",userDisktopSession);
                             console.log("userTerminalSession",userTerminalSession);
                             if(userDisktopSession.length>0){
-                            const latestUserDisktopSession = userDisktopSession[0]
-                                if(latestUserDisktopSession&&latestUserDisktopSession.msg.startsWith("Started")){
+                            const latestUserDesktopSession = userDisktopSession[0]
+                                if(latestUserDesktopSession&&latestUserDesktopSession.msg.startsWith("Started")){
+
+                                    var userinfo1 = userinfos.find(userinfo => userinfo.ip == latestUserDesktopSession.msgArgs[1]);
+                                    var userinfo2 = userinfos.find(userinfo => userinfo.ip == latestUserDesktopSession.msgArgs[2]);
+                                    if (!userinfo1) {
+                                        const event = events.find(event => event.etype == 'user' && event.ip == latestUserDesktopSession.msgArgs[1]);
+                                        if (event) {
+                                            userinfo1 = {
+                                                ip: event.ip,
+                                                msg: event.ip + ', ' + event.msgArgs[1] + ', ' + event.msgArgs[2]
+                                            };
+                                            userinfos.push(userinfo1);
+                                        }
+                                    }
+                                    if (!userinfo2) {
+                                        const event = events.find(event => event.etype == 'user' && event.ip == latestUserDesktopSession.msgArgs[2]);
+                                        if (event) {
+                                            userinfo2 = {
+                                                ip: event.ip,
+                                                msg: event.ip + ', ' + event.msgArgs[1] + ', ' + event.msgArgs[2]
+                                            };
+                                            userinfos.push(userinfo2);
+                                        }
+                                    }
+
                                     x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
-                                    x += '<td>' + latestUserDisktopSession.userid + '</td>';
-                                    x += '<td>' + "Started desktop session from " + latestUserDisktopSession.msgArgs[1] + " to " + latestUserDisktopSession.msgArgs[2] + '</td>';
-                                    x += '<td>' + getLoginDuration(latestUserDisktopSession.time) + '</td>';
-                                    x += '<td>' + '<a href=# onclick=\'return endDeviceSession("kvm", "' + encodeURIComponentEx(latestUserDisktopSession.nodeid) + '", "' + encodeURIComponentEx(latestUserDisktopSession.userid) + '")\' title="' + "Disconnect this session" + '" style=cursor:pointer> <button onclick="refresh()">Kill Session</button></a>' + '</td>';
+                                    x += '<td>' + latestUserDesktopSession.userid + '</td>';
+                                    x += '<td>' + "Started desktop session from " + (userinfo1 && userinfo1.msg || latestUserDesktopSession.msgArgs[1]) + " to " + (userinfo2 && userinfo2.msg || latestUserDesktopSession.msgArgs[2]) + '</td>';
+                                    x += '<td>' + getLoginDuration(latestUserDesktopSession.time) + '</td>';
+                                    x += '<td>' + '<a href=# onclick=\'return endDeviceSession("kvm", "' + encodeURIComponentEx(latestUserDesktopSession.nodeid) + '", "' + encodeURIComponentEx(latestUserDesktopSession.userid) + '")\' title="' + "Disconnect this session" + '" style=cursor:pointer> <button onclick="refresh()">Kill Session</button></a>' + '</td>';
                                 
                                     x += '</tr>';
                                 }
@@ -18738,9 +18765,34 @@
                             if(userTerminalSession.length>0){
                             const latestUserTerminalSession = userTerminalSession[0]
                                 if(latestUserTerminalSession&&latestUserTerminalSession.msg.startsWith("Started")){
+
+                                    var userinfo1 = userinfos.find(userinfo => userinfo.ip == latestUserTerminalSession.msgArgs[1]);
+                                    var userinfo2 = userinfos.find(userinfo => userinfo.ip == latestUserTerminalSession.msgArgs[2]);
+                                    if (!userinfo1) {
+                                        const event = events.find(event => event.etype == 'user' && event.ip == latestUserTerminalSession.msgArgs[1]);
+                                        if (event) {
+                                            userinfo1 = {
+                                                ip: event.ip,
+                                                msg: event.ip + ', ' + event.msgArgs[1] + ', ' + event.msgArgs[2]
+                                            };
+                                            userinfos.push(userinfo1);
+                                        }
+                                    }
+                                    if (!userinfo2) {
+                                        const event = events.find(event => event.etype == 'user' && event.ip == latestUserTerminalSession.msgArgs[2]);
+                                        if (event) {
+                                            userinfo2 = {
+                                                ip: event.ip,
+                                                msg: event.ip + ', ' + event.msgArgs[1] + ', ' + event.msgArgs[2]
+                                            };
+                                            userinfos.push(userinfo2);
+                                        }
+                                    }
+
+
                                     x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
                                     x += '<td>' + latestUserTerminalSession.userid + '</td>';
-                                    x += '<td>' + "Started terminal session from " + latestUserTerminalSession.msgArgs[1] + " to " + latestUserTerminalSession.msgArgs[2] + '</td>';
+                                    x += '<td>' + "Started terminal session from " + (userinfo1 && userinfo1.msg || latestUserTerminalSession.msgArgs[1]) + " to " + (userinfo2 && userinfo2.msg || latestUserTerminalSession.msgArgs[2]) + '</td>';
                                     x += '<td>' + getLoginDuration(latestUserTerminalSession.time) + '</td>';
                                     x += '<td>' + '<a href=# onclick=\'return endDeviceSession("terminal", "' + encodeURIComponentEx(latestUserTerminalSession.nodeid) + '", "' + encodeURIComponentEx(latestUserTerminalSession.userid) + '")\' title="' + "Disconnect this session" + '" style=cursor:pointer> <button onclick="refresh()">Kill Session</button></a>' + '</td>';
                                 
