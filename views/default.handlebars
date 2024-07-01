@@ -18597,7 +18597,7 @@
             QV('topbar', x != 0);
             if ((x == 0) && (webPageFullScreen)) { QC('body').add('arg_hide'); }
 
-            QV('MainSubMenuSpan', (x >= 10) && (x < 20)) || x == 180;
+            QV('MainSubMenuSpan', ((x >= 10) && (x < 20)) || x == 180);
             QV('UserDummyMenuSpan', (x == 51) || ((x < 10) && (x != 6) && webPageFullScreen));
             QV('MeshSubMenuSpan', (x >= 20) && (x < 30));
             QV('UserSubMenuSpan', (x >= 30) && (x < 40));
