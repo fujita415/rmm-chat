@@ -1896,7 +1896,10 @@ a {
 }
 
 .lb5 {
-  background: url(../images/leftbar-5.png);
+  background-image: url(../images/leftbar-5.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .lb6 {
