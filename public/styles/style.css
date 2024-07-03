@@ -1896,11 +1896,7 @@ a {
 }
 
 .lb5 {
-  background: url(../images/leftbar-64.png) -257px -2px;
-  background-image: image-set(
-    url(../images/leftbar-64.png) 1x,
-    url(../images/leftbar-128.png) 2x
-  );
+  background: url(../images/leftbar-5.png);
 }
 
 .lb6 {
