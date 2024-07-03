@@ -135,7 +135,7 @@ body {
     background-attachment: initial;
     background-repeat: no-repeat;
     /*width: 960px;*/
-    height: 66px;
+    /* height: 66px; */
 }
 
 .fullscreen #masthead {
