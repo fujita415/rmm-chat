@@ -3679,6 +3679,7 @@ a {
 /* chat section */
 .activity-feed {
   padding-top: 60px;
+  padding-bottom: 30px;
   list-style: none;
   background-color: #2b2b2b;
   color: #e4e2e2;
