@@ -192,8 +192,8 @@ body {
   /* height: calc(100vh - 66px); */
   width: 90px;
   z-index: 1000;
-  background: #113962;
-  background: linear-gradient(to bottom, #104893 0%, #113962 100%);
+  background: #121212;
+  /* background: linear-gradient(to bottom, #104893 0%, #113962 100%); */
   color: white;
   overflow-y: hidden;
   display: none;
@@ -341,10 +341,15 @@ body {
   box-sizing: border-box;
   margin: 0;
   padding: 0 15px;
-  background-color: #fff;
+  background-color: #121212;
   /* max-height: calc(100vh - 151px); */
   min-width: unset;
   overflow: hidden;
+  color: white;
+}
+
+#column_1 table tr td {
+    color: black;
 }
 
 .boxsize {
@@ -477,7 +482,7 @@ body {
   overflow: auto;
   width: 100%;
   text-align: center;
-  background-color: #113962;
+  background-color: #121212;
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -1864,35 +1869,31 @@ a {
 }
 
 .lb1 {
-  background: url(../images/leftbar-64.png) -1px -2px;
-  background-image: image-set(
-    url(../images/leftbar-64.png) 1x,
-    url(../images/leftbar-128.png) 2x
-  );
+    background-image: url(../images/leftbar-2.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .lb2 {
-  background: url(../images/leftbar-64.png) -66px -2px;
-  background-image: image-set(
-    url(../images/leftbar-64.png) 1x,
-    url(../images/leftbar-128.png) 2x
-  );
+    background-image: url(../images/leftbar-1.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .lb3 {
-  background: url(../images/leftbar-64.png) -130px -2px;
-  background-image: image-set(
-    url(../images/leftbar-64.png) 1x,
-    url(../images/leftbar-128.png) 2x
-  );
+    background-image: url(../images/leftbar-3.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .lb4 {
-  background: url(../images/leftbar-64.png) -194px -2px;
-  background-image: image-set(
-    url(../images/leftbar-64.png) 1x,
-    url(../images/leftbar-128.png) 2x
-  );
+    background-image: url(../images/leftbar-4.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .lb5 {
@@ -1903,11 +1904,10 @@ a {
 }
 
 .lb6 {
-  background: url(../images/leftbar-64.png) -318px -2px;
-  background-image: image-set(
-    url(../images/leftbar-64.png) 1x,
-    url(../images/leftbar-128.png) 2x
-  );
+    background-image: url(../images/leftbar-6.png);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .m0 {
