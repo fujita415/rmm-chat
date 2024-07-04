@@ -856,135 +856,17 @@
             </div>
 {{!-- topic 2 --}}
             <div id=p180 style="display: none">
-                <div id="p180title">
-                    <div id="p180BackButton" style="float:left"><div class="backButton" tabindex=0 onclick=goBack() title="Back" onkeypress="if (event.key == 'Enter') goBack()"><div class="backButtonEx"></div></div></div>
-                    <h1>History - <span id=p180deviceName></span></h1>
+                <div id="p180title" style="color: white; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center;">
+                        <div id="p180BackButton" style="float:left"><div class="backButton" tabindex=0 onclick=goBack() title="Back" onkeypress="if (event.key == 'Enter') goBack()"><div class="backButtonEx"></div></div></div>
+                        <h1>History - <span id=p180deviceName></span></h1>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        <h3>Users</h3> <div id ="p180TopSelectButton"></div>  
+                    </div>
                 </div>
                 <div id=p180info style="overflow-y:auto">
-                    <ol class="activity-feed">
-                     
-                        {{!-- active --}}
-                        <li class="main-feed" >
-                        <div class= "feed-left-item">
-                            <div class="left-content">Now</div>
-                        </div>
-                        <div class="feed-right-item">
-                            <div class="active-sesion">
-                                <div class="diamond"><span>7D</span></div>
-                            </div>
-                            <div class="node-details">
-                                <div class="node-shape">
-                                    <div class="node-connected-time"><span>40 m</span></div> 
-                                </div>
-                            </div>
-                        </div>
-                      </li>
-                      {{!-- name --}}
-                        <li class="main-feed" >
-                        <div class= "feed-left-item">
-                            <div class="left-content">Yesterday @ 11:09:03 PM</div>
-                        </div>
-                        <div class="feed-right-item">
-                            <div class="pipe">
-                            </div>
-                            <div class="node-details">
-                                <div class="node-time-pipe" style="height: 100px;"></div>
-                                <div class="node-shape">
-                                   
-                
-                                    <div class="node-name">Node name BBW Demo 1</div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                      </li>
-                      {{!-- start --}}
-                        <li class="main-feed" >
-                        <div class= "feed-left-item">
-                            <div class="left-content">Yesterday @ 11:09:03 PM</div>
-                        </div>
-                        <div class="feed-right-item">
-                            <div class="pipe">
-                            </div>
-                            <div class="node-details">
-                                <div class="node-shape">
-                                  
-                                    <div class="node-start-circle"></div>
-                             
-                                </div>
-                            </div>
-                        </div>
-                      </li>
 
-                      {{!-- gap --}}
-                        <li class="main-feed" >
-                        <div class= "feed-left-item">
-                            <div class="left-content">Yesterday @ 11:09:03 PM</div>
-                        </div>
-                        <div class="feed-right-item">
-                            <div class="pipe" style="min-height: 70px;">
-                                <div class="circle"></div>
-                            </div>
-                            <div class="node-details">
-                                <div class="node-shape"></div>
-                            </div>
-                        </div>
-                      </li> 
-
-
-                        {{!-- end session --}}
-                        <li class="main-feed" >
-                        <div class= "feed-left-item">
-                            <div class="left-content">Yesterday @ 11:09:03 PM</div>
-                        </div>
-                        <div class="feed-right-item">
-                            <div class="pipe">
-                            </div>
-                            <div class="node-details">
-                                <div class="node-shape">
-                                    <div class="node-open-for-time">27m</div> 
-                                </div>
-                            </div>
-                        </div>
-                      </li>
-                      {{!-- name --}}
-                        <li class="main-feed" >
-                        <div class= "feed-left-item">
-                            <div class="left-content">Yesterday @ 11:09:03 PM</div>
-                        </div>
-                        <div class="feed-right-item">
-                            <div class="pipe">
-                            </div>
-                            <div class="node-details">
-                                <div class="node-time-pipe" style="height: 100px;"></div>
-                                <div class="node-shape">
-                                   
-                
-                                    <div class="node-name">Node name BBW Demo 1</div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                      </li>
-                      {{!-- start --}}
-                        <li class="main-feed" >
-                        <div class= "feed-left-item">
-                            <div class="left-content">Yesterday @ 11:09:03 PM</div>
-                        </div>
-                        <div class="feed-right-item">
-                            <div class="pipe">
-                            </div>
-                            <div class="node-details">
-                                <div class="node-shape">
-                                  
-                                    <div class="node-start-circle"></div>
-                             
-                                </div>
-                            </div>
-                        </div>
-                      </li>
-
-                    </ol>
                 </div>
             </div>
 
@@ -2437,7 +2319,7 @@
                     if (updateNaggleFlags & 2048) { userEventsUpdate(); }
                     if (updateNaggleFlags & 4096) { p20updateMesh(); }
                     if (updateNaggleFlags & 8192) { updateUserGroups(); }
-                    if (updateNaggleFlags & 16384) { updateUsers();updateTimelineEvents() }
+                    if (updateNaggleFlags & 16384) { updateUsers();updateTimelineEvents();updateHistoryContent() }
                     if (updateNaggleFlags & 32768) { updateRecordings(); }
                     if (updateNaggleFlags & 65536) { updateLoginTokens(); }
                     {{!-- if (updateNaggleFlags & 131072) { updateTimelineEvents(); } --}}
@@ -7528,7 +7410,9 @@
                 QH('p15deviceName', "Console - " + nname);
                 QH('p16deviceName', nname);
                 QH('p17deviceName', nname);
+                QH('p18deviceName', nname);
                 QH('p19deviceName', nname);
+                QH('p180deviceName', nname);
 
                 // Node attributes
                 var x = '<table style=width:100%>';
@@ -18789,19 +18673,18 @@
       {{!-- topic 1 --}}
 
         function showTimelineContent() {
-           
             meshserver.send({ action: 'users' });
             meshserver.send({ action: 'wssessioncount' });
             meshserver.send({ action: 'events', source: 'timeline' });
+            if(currentNode){
+                
+            }
         }
 
         function updateTimelineEvents() {
-
-
             const filteredData = events.filter(record =>  record.etype === 'relay');
-            var displayUsersLimit = ((userViewSettings != null) && (userViewSettings.noViewLimit)) ? 100000 : 100;
-            // Sort the list of user id's
-            var sortedUsers = [], maxUsers = displayUsersLimit, hiddenUsers = 0;
+             // Sort the list of user id's
+            var sortedUsers = [], hiddenUsers = 0;
             for (var i in users) { sortedUsers.push(users[i]); }
             sortedUsers.sort(nameSort);
             const nodeId = currentNode?currentNode._id:null;
@@ -18827,7 +18710,7 @@
             x += '<th>Action</th>';
             x += '</tr></thead>';
             x += '<tbody>';
-           for (var i in sortedUsers) {
+            for (var i in sortedUsers) {
                 var user = sortedUsers[i], sessions = null;
                 if (wssessions != null) { sessions = wssessions[user._id]; }
                 if ((sessions != null)) {
@@ -18869,7 +18752,7 @@
                                     x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
                                     x += '<td>' + latestUserDesktopSession.userid + '</td>';
                                     x += '<td>' + "Started desktop session from " + (userinfo1 && userinfo1.msg || latestUserDesktopSession.msgArgs[1]) + " to " + (userinfo2 && userinfo2.msg || latestUserDesktopSession.msgArgs[2]) + '</td>';
-                                    x += '<td>' + getLoginDuration(latestUserDesktopSession.time) + '</td>';
+                                    x += '<td>' + getActiveDuration(latestUserDesktopSession.time) + '</td>';
                                     x += '<td>' + '<a href=# onclick=\'return endDeviceSession("kvm", "' + encodeURIComponentEx(latestUserDesktopSession.nodeid) + '", "' + encodeURIComponentEx(latestUserDesktopSession.userid) + '")\' title="' + "Disconnect this session" + '" style=cursor:pointer> <button onclick="refresh()">Kill Session</button></a>' + '</td>';
                                 
                                     x += '</tr>';
@@ -18907,7 +18790,7 @@
                                     x += '<tr class="' + (i % 2 === 0 ? 'even' : '') + '">';
                                     x += '<td>' + latestUserTerminalSession.userid + '</td>';
                                     x += '<td>' + "Started terminal session from " + (userinfo1 && userinfo1.msg || latestUserTerminalSession.msgArgs[1]) + " to " + (userinfo2 && userinfo2.msg || latestUserTerminalSession.msgArgs[2]) + '</td>';
-                                    x += '<td>' + getLoginDuration(latestUserTerminalSession.time) + '</td>';
+                                    x += '<td>' + getActiveDuration(latestUserTerminalSession.time) + '</td>';
                                     x += '<td>' + '<a href=# onclick=\'return endDeviceSession("terminal", "' + encodeURIComponentEx(latestUserTerminalSession.nodeid) + '", "' + encodeURIComponentEx(latestUserTerminalSession.userid) + '")\' title="' + "Disconnect this session" + '" style=cursor:pointer> <button onclick="refresh()">Kill Session</button></a>' + '</td>';
                                 
                                     x += '</tr>';
@@ -18927,12 +18810,13 @@
 
            
         }
+        
         function refresh() {
             showTimelineContent()
         }
 
-        function getLoginDuration(loginTimestamp) {
-          const loginDate = new Date(loginTimestamp);
+        function getActiveDuration(timestamp) {
+          const loginDate = new Date(timestamp);
           const currentDate = new Date();
           const differenceInMilliseconds = currentDate - loginDate;
           const seconds = Math.floor((differenceInMilliseconds / 1000) % 60);
@@ -18952,9 +18836,271 @@
 
         {{!-- topic 2 --}}
 
-        function showHistoryContent(){
-            console.log("clicked")
+        function showHistoryContent(){       
+            meshserver.send({ action: 'users' });
+            meshserver.send({ action: 'events', source: 'timeline' });        
         }
+
+        function updateHistoryContent(){
+
+            var sortedUsers = [], deviceUsers = [] ;
+            for (var i in users) { sortedUsers.push(users[i]); }
+            sortedUsers.sort(nameSort);
+            const nodeId = currentNode?currentNode._id:null;
+            for (var i in sortedUsers) {
+                var user = sortedUsers[i], sessions = null;
+                if(user?.links){
+                   const nodeKeys = Object.keys(user.links)?.filter(key => key.startsWith("node//"));
+                   if(nodeKeys.includes(nodeId)){
+                       deviceUsers.push(user)
+                    }
+                }     
+            }
+            if(deviceUsers.length>0){
+                showSelectUserField(deviceUsers)
+            }
+        }
+
+        function showSelectUserField(users){
+            
+            var x = '';
+            x += '<style>';
+            x += '.user-select { padding: 8px 18px; background: #121212; color: white; font-size: 15px; }';
+            x += '</style>';
+            x += '<select class="user-select"  onchange="handleSelectChange(event)">';
+            for (var i in users) {
+                var user = users[i];
+                x += '<option value="' + user._id + '">' + user.name + '</option>';
+            }
+
+            x += '</select>';
+            QH('p180TopSelectButton', x);
+            handleShowHistoryNode(users[0]._id)
+        }
+
+        function handleSelectChange(event) {
+            var selectBox = event.target;
+            var selectedUserId = selectBox.value;
+            handleShowHistoryNode(selectedUserId)
+        }
+
+        function handleShowHistoryNode(selectedUserId) {
+            const filteredData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.msg.includes("desktop"));
+            var windowHeight = window.innerHeight; 
+            var maxHeight = windowHeight - 318; 
+console.log("filteredData",filteredData)
+            if(filteredData.length>0){
+                let x = `<ol  class="activity-feed" style="max-height:` + maxHeight + `px ;">`;
+
+                for (var i in filteredData) {
+                    let sessionEvent = filteredData[i];
+                    let isSessionEnd = sessionEvent.msg.startsWith("Ended");
+                    let isSessionStart = sessionEvent.msg.startsWith("Started");
+                    let startHistory =  filteredData[filteredData.length - 1].time;
+                    if(isSessionStart&&i==0){
+                        x += `
+                            <li class="main-feed">
+                                <div class="feed-left-item">
+                                    <div class="left-content">Now</div>
+                                </div>
+                                <div class="feed-right-item">
+                                    <div class="active-sesion">
+                                        <div class="diamond"><span>`+getDurationInDays(startHistory)+`</span></div>
+                                    </div>
+                                    <div class="node-details">
+                                        <div class="node-shape">
+                                            <div class="node-connected-time"><span>`+ getActiveDuration(sessionEvent.time) +`</span></div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        `;
+                    }
+
+                    else if(i==0){
+                        x += `
+                            <li class="main-feed">
+                                <div class="feed-left-item">
+                                    <div class="left-content">Now</div>
+                                </div>
+                                <div class="feed-right-item">
+                                    <div class="active-sesion">
+                                        <div class="diamond"><span>`+getDurationInDays(startHistory)+`</span></div>
+                                    </div>
+                                    
+                                </div>
+                            </li>
+                        `;
+                    }
+
+                    if(isSessionEnd){
+                        let NextIndex = parseInt(i)+1
+                        let sessionEndTime = filteredData[i].time;
+                        let sessionStartTime = filteredData[NextIndex].time;
+                        x += `
+                            <li class="main-feed">
+                                <div class="feed-left-item">
+                                    <div class="left-content">`+ formatTimestamp(sessionEvent.time) +`</div>
+                                </div>
+                                <div class="feed-right-item">
+                                    <div class="pipe"></div>
+                                    <div class="node-details">
+                                        <div class="node-shape">
+                                            <div class="node-open-for-time">`+getTimeDifference(sessionStartTime,sessionEndTime)+`</div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        `;
+                    }
+
+                    if(isSessionStart){
+                        let isActive = i==0
+                        let sessionEndTime ;
+                       if(i>0){
+                        let prevIndex = parseInt(i)-1
+                        sessionEndTime = filteredData[prevIndex].time;
+                       }
+                        let sessionStartTime = filteredData[i].time;
+                        x += `
+                            <li class="main-feed">
+                                <div class="feed-left-item">
+                                    <div class="left-content">`+ formatTimestamp(sessionEvent.time) +`</div>
+                                </div>
+                                <div class="feed-right-item">
+                                    <div class="pipe"></div>
+                                    <div class="node-details">
+                                        <div class="node-time-pipe" style="height: `+getDurationPipeHeight(sessionStartTime,sessionEndTime,isActive)+`;"></div>
+                                        <div class="node-shape">
+                                            <div class="node-name">Node name BBW Demo 1</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        `;
+
+                        {{!-- node start --}}
+                        x += `
+                            <li class="main-feed">
+                                <div class="feed-left-item">
+                                    <div class="left-content">`+ formatTimestamp(sessionEvent.time) +`</div>
+                                </div>
+                                <div class="feed-right-item">
+                                    <div class="pipe"></div>
+                                    <div class="node-details">
+                                        <div class="node-shape">
+                                            <div class="node-start-circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        `;
+                    }
+
+                }
+
+
+
+                {{!-- simple date --}}
+                {{!-- x += `
+                    <li class="main-feed">
+                        <div class="feed-left-item">
+                            <div class="left-content">Yesterday @ 11:09:03 PM</div>
+                        </div>
+                        <div class="feed-right-item">
+                            <div class="pipe" style="min-height: 70px;">
+                                <div class="circle"></div>
+                            </div>
+                            <div class="node-details">
+                                <div class="node-shape"></div>
+                            </div>
+                        </div>
+                    </li>
+                `; --}}
+
+                x += '</ol>';
+                QH('p180info', x);
+                
+            }
+        }
+
+        function formatTimestamp(timestamp) {
+          const date = new Date(timestamp);
+
+          const now = new Date();
+          const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+          const yesterday = new Date(today.getTime() - 86400000);
+
+          const givenDate = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+    
+          let dateString;
+          if (givenDate.getTime() === today.getTime()) {
+            dateString = "Today";
+          } else if (givenDate.getTime() === yesterday.getTime()) {
+            dateString = "Yesterday";
+          } else {
+            dateString = date.toISOString().split('T')[0]; 
+          }
+
+          const timeString = date.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+          });
+
+          return `${dateString} @ ${timeString}`;
+        }
+
+        function getTimeDifference(startTime, endTime) {
+          const start = new Date(startTime);
+          const end = new Date(endTime);
+
+          const differenceInMilliseconds = end - start;
+
+          const seconds = Math.floor((differenceInMilliseconds / 1000) % 60);
+          const minutes = Math.floor((differenceInMilliseconds / (1000 * 60)) % 60);
+          const hours = Math.floor((differenceInMilliseconds / (1000 * 60 * 60)));
+
+          let durationString = '';
+          if (hours > 0) {
+            durationString += `${hours}hr `;
+          }
+          if (minutes > 0 || hours > 0) {
+            durationString += `${minutes}m `;
+          }
+          durationString += `${seconds}s`;
+
+          return durationString.trim();
+        }
+
+        function getDurationPipeHeight(startTime, endTime,isActive) {
+          const start = new Date(startTime);
+          const end = isActive ? new Date() : new Date(endTime);
+          const differenceInMilliseconds = end - start;
+          const totalMinutes = Math.floor(differenceInMilliseconds / (1000 * 60));
+          return `${(totalMinutes*2)+40}px`;
+        }
+
+        function getDurationInDays(timestamp) {
+          const loginDate = new Date(timestamp);
+          const currentDate = new Date();
+          const differenceInMilliseconds = currentDate - loginDate;
+
+          const days = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((differenceInMilliseconds / (1000 * 60 * 60)) % 24);
+
+          let durationString = '';
+          if (days > 0) {
+            durationString += `${days}d `;
+          }
+          if (hours > 0 || days > 0) {
+            durationString += `${hours}h `;
+          }
+
+          return durationString.trim(); 
+        }
+
 
         function updatePluginList(versInfo) {
             if (pluginHandler == null) return;
