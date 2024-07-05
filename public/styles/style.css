@@ -136,6 +136,7 @@ body {
   background-position-y: 0px;
   background-attachment: initial;
   background-repeat: no-repeat;
+  background-size: auto 100%;
   /*width: 960px;*/
   /* height: 66px; */
 }
@@ -1599,6 +1600,7 @@ NoMeshesPanel img {
   height: 200px;
   width: 200px;
   float: right;
+  background-color: white;
 }
 
 #DeskTools {
@@ -3842,4 +3844,15 @@ a {
       }
     }
   }
+}
+
+.icon-device {
+    background: #FFFFFF !important;
+    background-image: url(../images/leftbar-1.png) !important;
+    background-size: 80% auto !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+.icon-device.gray {
+
 }
