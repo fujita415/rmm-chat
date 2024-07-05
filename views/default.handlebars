@@ -18885,12 +18885,9 @@
         }
 
         function handleShowHistoryNode(selectedUserId) {
-            const filteredAllData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.msg.includes("desktop"));
-            console.log("filteredAllData",filteredAllData)
             const filteredData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.msg.includes("desktop")&&isWithinLast30Days(record.time));
             var windowHeight = window.innerHeight; 
             var maxHeight = windowHeight - 318; 
-            console.log("filteredData",filteredData)
             if(filteredData.length>0){
                 let x = `<ol  class="activity-feed" style="max-height:` + maxHeight + `px ;">`;
 
@@ -19023,6 +19020,10 @@
                 x += '</ol>';
                 QH('p180info', x);
                 
+            }else{
+                let x = `<ol  class="activity-feed" style="max-height:` + maxHeight + `px ;">`;
+                x += '</ol>';
+                QH('p180info', x);
             }
         }
 
