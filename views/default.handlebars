@@ -18842,20 +18842,25 @@
         }
 
         function updateHistoryContent(){
-
+            console.log("currentNode",currentNode)
+            console.log("currentUser",currentUser)
+            console.log("users",users)
             var sortedUsers = [], deviceUsers = [] ;
             for (var i in users) { sortedUsers.push(users[i]); }
             sortedUsers.sort(nameSort);
             const nodeId = currentNode?currentNode._id:null;
+            const meshId = currentNode?currentNode.meshid:null;
             for (var i in sortedUsers) {
                 var user = sortedUsers[i], sessions = null;
                 if(user?.links){
                    const nodeKeys = Object.keys(user.links)?.filter(key => key.startsWith("node//"));
-                   if(nodeKeys.includes(nodeId)){
+                   const NodeMeshId = Object.keys(user.links)?.filter(key => key.startsWith("mesh//"));
+                   if(nodeKeys.includes(nodeId)||NodeMeshId.includes(meshId)){
                        deviceUsers.push(user)
                     }
                 }     
             }
+            console.log("deviceUsers",deviceUsers)
             if(deviceUsers.length>0){
                 showSelectUserField(deviceUsers)
             }
@@ -18885,7 +18890,10 @@
         }
 
         function handleShowHistoryNode(selectedUserId) {
-            const filteredData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.msg.includes("desktop")&&isWithinLast30Days(record.time));
+            console.log("filterEvent",events.filter(record =>  record.etype === 'relay'))
+            const nodeId = currentNode?currentNode._id:null;
+            const filteredData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.nodeid===nodeId&&record.msg.includes("desktop")&&isWithinLast30Days(record.time));
+            console.log("filteredData",filteredData)
             var windowHeight = window.innerHeight; 
             var maxHeight = windowHeight - 318; 
             if(filteredData.length>0){
