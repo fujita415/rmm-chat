@@ -18885,10 +18885,10 @@
         }
 
         function handleShowHistoryNode(selectedUserId) {
-            const filteredData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.msg.includes("desktop"));
+            const filteredData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.msg.includes("desktop")&&isWithinLast30Days(record.time));
             var windowHeight = window.innerHeight; 
             var maxHeight = windowHeight - 318; 
-console.log("filteredData",filteredData)
+            console.log("filteredData",filteredData)
             if(filteredData.length>0){
                 let x = `<ol  class="activity-feed" style="max-height:` + maxHeight + `px ;">`;
 
@@ -18972,7 +18972,7 @@ console.log("filteredData",filteredData)
                                     <div class="node-details">
                                         <div class="node-time-pipe" style="height: `+getDurationPipeHeight(sessionStartTime,sessionEndTime,isActive)+`;"></div>
                                         <div class="node-shape">
-                                            <div class="node-name">Node name BBW Demo 1</div>
+                                            <div class="node-name">`+sessionEvent.username+`</div>
                                         </div>
                                     </div>
                                 </div>
@@ -19101,6 +19101,13 @@ console.log("filteredData",filteredData)
           return durationString.trim(); 
         }
 
+        function isWithinLast30Days(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const timeDifference = now - date;
+            const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000;
+            return timeDifference <= thirtyDaysInMilliseconds;
+        }
 
         function updatePluginList(versInfo) {
             if (pluginHandler == null) return;
