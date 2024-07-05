@@ -18885,6 +18885,8 @@
         }
 
         function handleShowHistoryNode(selectedUserId) {
+            const filteredAllData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.msg.includes("desktop"));
+            console.log("filteredAllData",filteredAllData)
             const filteredData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.msg.includes("desktop")&&isWithinLast30Days(record.time));
             var windowHeight = window.innerHeight; 
             var maxHeight = windowHeight - 318; 
