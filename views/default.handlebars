@@ -18842,9 +18842,6 @@
         }
 
         function updateHistoryContent(){
-            console.log("currentNode",currentNode)
-            console.log("currentUser",currentUser)
-            console.log("users",users)
             var sortedUsers = [], deviceUsers = [] ;
             for (var i in users) { sortedUsers.push(users[i]); }
             sortedUsers.sort(nameSort);
@@ -18860,7 +18857,6 @@
                     }
                 }     
             }
-            console.log("deviceUsers",deviceUsers)
             if(deviceUsers.length>0){
                 showSelectUserField(deviceUsers)
             }
@@ -18890,10 +18886,8 @@
         }
 
         function handleShowHistoryNode(selectedUserId) {
-            console.log("filterEvent",events.filter(record =>  record.etype === 'relay'))
             const nodeId = currentNode?currentNode._id:null;
             const filteredData = events.filter(record =>  record.etype === 'relay'&&record.userid===selectedUserId&&record.nodeid===nodeId&&record.msg.includes("desktop")&&isWithinLast30Days(record.time));
-            console.log("filteredData",filteredData)
             var windowHeight = window.innerHeight; 
             var maxHeight = windowHeight - 318; 
             if(filteredData.length>0){
