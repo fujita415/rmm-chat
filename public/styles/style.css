@@ -1833,7 +1833,7 @@ a {
   width: 74px;
   height: 74px;
   border-radius: 5px;
-  background-color: white;
+  /* background-color: white; */
   margin-left: 8px;
   margin-top: 8px;
   position: relative;
@@ -1871,42 +1871,42 @@ a {
 }
 
 .lb1 {
-    background-image: url(../images/leftbar-2.png);
+    background-image: url(../images/white-leftbar-2.png);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .lb2 {
-    background-image: url(../images/leftbar-1.png);
+    background-image: url(../images/white-leftbar-1.png);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .lb3 {
-    background-image: url(../images/leftbar-3.png);
+    background-image: url(../images/white-leftbar-3.png);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .lb4 {
-    background-image: url(../images/leftbar-4.png);
+    background-image: url(../images/white-leftbar-4.png);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .lb5 {
-  background-image: url(../images/leftbar-5.png);
+  background-image: url(../images/white-leftbar-5.png);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
 }
 
 .lb6 {
-    background-image: url(../images/leftbar-6.png);
+    background-image: url(../images/white-leftbar-6.png);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
