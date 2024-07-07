@@ -50,6 +50,8 @@ const MESHRIGHT_ADMIN               = 0xFFFFFFFF;
 // 100 = Intel AMT WSMAN
 // 101 = Intel AMT Redirection
 // 200 = Messenger
+const fs = require('fs');
+const path = require('path');
 
 function checkDeviceSharePublicIdentifier(parent, domain, nodeid, pid, extraKey, func) {
     // Check the public id
@@ -66,6 +68,7 @@ function checkDeviceSharePublicIdentifier(parent, domain, nodeid, pid, extraKey,
 }
 
 module.exports.CreateMeshRelay = function (parent, ws, req, domain, user, cookie) {
+    
     if ((cookie != null) && (typeof cookie.nid == 'string') && (typeof cookie.pid == 'string')) {
         checkDeviceSharePublicIdentifier(parent, domain, cookie.nid, cookie.pid, cookie.k, function (result) {
             // If the identifier if not found, close the connection
@@ -586,7 +589,14 @@ function CreateMeshRelayEx(parent, ws, req, domain, user, cookie) {
     ws.flushSink = function () { try { ws._socket.resume(); } catch (ex) { console.log(ex); } };
 
     // When data is received from the mesh relay web socket
+    // clue-1
     ws.on('message', function (data) {
+       if(typeof data ==="string"){
+            const parsedData = JSON.parse(data)
+            if(parsedData.type==="save-chat"){
+                appendData(parsedData.data,parsedData.deviceName)
+            }
+        }
         // Perform traffic accounting
         parent.trafficStats.relayIn[this._socket.p] += (this._socket.bytesRead - this._socket.bytesReadEx);
         parent.trafficStats.relayOut[this._socket.p] += (this._socket.bytesWritten - this._socket.bytesWrittenEx);
@@ -667,6 +677,56 @@ function CreateMeshRelayEx(parent, ws, req, domain, user, cookie) {
         closeBothSides();
     });
 
+    // save chat in file
+    function appendData(newData,deviceName) {
+        const filePath = path.join(__dirname, `public/chats/${deviceName}.json`);
+    
+        // Ensure directory exists
+        const dir = path.dirname(filePath);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+    
+        fs.readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                if (err.code === 'ENOENT') {
+                    // If file does not exist, create it and write the new data
+                    const jsonArray = [newData];
+                    fs.writeFile(filePath, JSON.stringify(jsonArray, null, 2), (err) => {
+                        if (err) {
+                            console.error('Error writing file', err);
+                        } else {
+                            console.log('File has been created and data written successfully');
+                        }
+                    });
+                } else {
+                    console.error('Error reading file', err);
+                }
+                return;
+            }
+            
+            let jsonArray;
+            try {
+                jsonArray = JSON.parse(data);
+                if (!Array.isArray(jsonArray)) {
+                    jsonArray = [jsonArray];
+                }
+            } catch (err) {
+                console.error('Error parsing JSON', err);
+                return;
+            }
+    
+            jsonArray.push(newData);
+    
+            fs.writeFile(filePath, JSON.stringify(jsonArray, null, 2), (err) => {
+                if (err) {
+                    console.error('Error writing file', err);
+                } else {
+                    console.log('Data has been appended successfully');
+                }
+            });
+        });
+    }
     // Set the session expire timer
     function setExpireTimer() {
         if (obj.expireTimer != null) { clearTimeout(obj.expireTimer); delete obj.expireTimer; }

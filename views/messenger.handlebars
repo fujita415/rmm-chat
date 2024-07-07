@@ -289,7 +289,12 @@
                 chatTextSession += ((new Date()).toLocaleTimeString() + ' - ' + "Local" + '> ' + outtext + '\r\n');
                 QA('xmsg', '<div style="clear:both"><div class="localBubble"><small class="sender-name">' + senderName + '</small> <small class="timeStamp">' + timestamp + '</small><br>' + EscapeHtml(outtext) + '</div><div></div></div>');
                 Q('xmsgparent').scrollTop = Q('xmsgparent').scrollHeight;
-                if ((state == 2) || pushMessaging) { send({ action: 'chat', msg: outtext, senderName: username }); }
+                if ((state == 2) || pushMessaging) { 
+                    send({ action: 'chat', msg: outtext, senderName: username }); 
+                    console.log("send message"); 
+                    let dataObj={ msg: outtext, senderName: username,time:new Date()}
+                    socket.send(JSON.stringify({ type: 'save-chat',data:dataObj ,deviceName:newTitle}));
+                    }
                 Q('xouttext').value = '';
                 Q('xouttext').focus();
                 localOutText = false;
@@ -415,6 +420,7 @@
 
         // Send data over the current transport (WebRTC first)
         function send(data) {
+            console.log("in sendddd",data)
             if ((state != 2) && (pushMessaging == false)) return; // If not in connected state, ignore this.
             if (typeof data == 'object') { data = JSON.stringify(data); } // If this is an object, convert it to a string.
             if (!serverRecording && webchannel && webchannel.ok) { if (webchannel.xoutBuffer != null) { webchannel.xoutBuffer.push(data); } else { webchannel.send(data); } } // If WebRTC channel is possible, use it or hold until we can use it.
@@ -426,7 +432,7 @@
             if (state != 2) return;
             //console.log('SEND', data);
             if (typeof data == 'object') { data = JSON.stringify(data); }
-            if (socket != null) { socket.send(data); }
+            if (socket != null) { socket.send(data); console.log("data",data) }
         }
 
         // WebRTC id switcher (0 -> 0, 1 -> 2, 2 -> 1)
@@ -456,7 +462,7 @@ function processMessage(data, transport) {
 
         // Handle command
         switch (data.action) {
-            case 'chat': { displayRemote(data.msg, data.senderName); updateRemoteOutText(false); break; } // Incoming chat message.
+            case 'chat': { console.log("receive message");  displayRemote(data.msg, data.senderName); updateRemoteOutText(false); break; } // Incoming chat message.
             case 'outtext': { updateRemoteOutText(data.value); break; }
             case 'ctrl': {
                 if (data.value == 1) { displayControl("Sent as push notification."); }
@@ -801,8 +807,9 @@ function processMessage(data, transport) {
                 displayControl("Error: No connection key specified.");
             }
         }
-        function saveChatSession() {
-            saveAs(data2blob(chatTextSession), "ChatSession");
+
+        function saveChatSession() { 
+           saveAs(data2blob(chatTextSession), "ChatSession");
         }
 
         start();

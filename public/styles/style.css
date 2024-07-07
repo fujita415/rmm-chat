@@ -3678,7 +3678,7 @@ a {
   font-weight: bold;
 }
 
-/* chat section */
+/* history section */
 .activity-feed {
   padding-top: 60px;
   padding-bottom: 30px;
@@ -3845,6 +3845,25 @@ a {
     }
   }
 }
+
+/* chat section */
+.chat {
+  list-style-type: none; 
+  padding: 0;
+  margin: 0;
+}
+
+.chat li {
+  color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  max-width: 80%; 
+}
+
+/* .chat li:nth-child(even) {
+  background-color: #d3d3d3; 
+} */
 
 .icon-device {
     background: #FFFFFF !important;

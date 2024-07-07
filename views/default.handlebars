@@ -224,6 +224,7 @@
                                 <td tabindex=0 id=MainDevTerminal class="topbar_td style3x" onmouseup=go(12,event) onkeypress="if (event.key == 'Enter') go(12)">Terminal</td>
                                 <td tabindex=0 id=MainDevTimeline class="topbar_td style3x" onmouseup=go(18,event) onkeypress="if (event.key == 'Enter') go(18)">Timeline</td>
                                 <td tabindex=0 id=MainDevHistory class="topbar_td style3x" onmouseup=go(180,event) onkeypress="if (event.key == 'Enter') go(180)">History</td>
+                                <td tabindex=0 id=MainDevChat class="topbar_td style3x" onmouseup=go(181,event) onkeypress="if (event.key == 'Enter') go(181)">Chats</td>
                                 <td tabindex=0 id=MainDevFiles class="topbar_td style3x" onmouseup=go(13,event) onkeypress="if (event.key == 'Enter') go(13)">Files</td>
                                 <td tabindex=0 id=MainDevEvents class="topbar_td style3x" onmouseup=go(16,event) onkeypress="if (event.key == 'Enter') go(16)">Events</td>
                                 <td tabindex=0 id=MainDevInfo class="topbar_td style3x" onmouseup=go(17,event) onkeypress="if (event.key == 'Enter') go(17)">Details</td>
@@ -854,7 +855,7 @@
                     
                 </div>
             </div>
-{{!-- topic 2 --}}
+            {{!-- topic 2 --}}
             <div id=p180 style="display: none">
                 <div id="p180title" style="color: white; display: flex; align-items: center; justify-content: space-between;">
                     <div style="display: flex; align-items: center;">
@@ -867,6 +868,17 @@
                 </div>
                 <div id=p180info style="overflow-y:auto">
 
+                </div>
+            </div>
+
+            {{!-- topic 3 --}}
+            <div id=p181 style="display:none">
+                <div id="p181title">
+                    <div id="p181BackButton" style="float:left"><div class="backButton" tabindex=0 onclick=goBack() title="Back" onkeypress="if (event.key == 'Enter') goBack()"><div class="backButtonEx"></div></div></div>
+                    <h1>Chat - <span id=p181deviceName></span></h1>
+                </div>
+                <div id=p181events style="overflow-y:auto">
+                    
                 </div>
             </div>
 
@@ -7413,6 +7425,7 @@
                 QH('p18deviceName', nname);
                 QH('p19deviceName', nname);
                 QH('p180deviceName', nname);
+                QH('p181deviceName', nname);
 
                 // Node attributes
                 var x = '<table style=width:100%>';
@@ -7839,6 +7852,7 @@
                 QV('MainDevTerminal', (((node.agent == null) && (node.intelamt != null)) || ((node.agent) && (node.agent.caps == null)) || ((node.agent) && ((node.agent.caps & 2) != 0)) || (node.intelamt && (node.intelamt.state == 2))) && (meshrights & 8) && terminalAccess);
                 QV('MainDevTimeline', (node.agent != null) && (node.agent.caps != null) && ((node.agent.caps & 4) != 0) && (meshrights & 8)&&(userinfo.siteadmin!==0));
                 QV('MainDevHistory', (node.agent != null) && (node.agent.caps != null) && ((node.agent.caps & 4) != 0) && (meshrights & 8)&&(userinfo.siteadmin!==0));
+                QV('MainDevChat', (node.agent != null) && (node.agent.caps != null) && ((node.agent.caps & 4) != 0) && (meshrights & 8)&&(userinfo.siteadmin!==0));
                 QV('MainDevFiles', (node.agent != null) && (node.agent.caps != null) && ((node.agent.caps & 4) != 0) && (meshrights & 8) && fileAccess);
                 QV('MainDevInfo', (node.mtype < 3) && ((meshrights & 1048576) != 0));
                 QV('MainDevAmt', (node.intelamt != null) && ((node.intelamt.state == 2) || (node.conn & 2)) && (meshrights & 8) && amtAccess);
@@ -18489,7 +18503,7 @@
             // If "shift" is pressed, open a new tab.
             if (event && ((event.shiftKey == true) || (event.which == 2) || (event.button == 1)) && (x != 15) && ('{{{currentNode}}}'.toLowerCase() == '')) {
                 // Open the device in a different tab
-                if (((x >= 10) && (x <= 19)) || x == 180) {
+                if ((((x >= 10) && (x <= 19)) || x == 180)||(((x >= 10) && (x <= 19)) || x == 181)) {
                     if (currentNode) { safeNewWindow(window.location.origin + '{{{domainurl}}}' + '?gotonode=' + currentNode._id.split('/')[2] + '&viewmode=' + x + '&hide=16' + ((urlargs.key)?('&key=' + urlargs.key):''), 'meshcentral:' + currentNode._id); }
                 } else if ((x >= 20) && (x <= 29)) {
                     if (currentMesh) { safeNewWindow(window.location.origin + '{{{domainurl}}}' + '?gotomesh=' + currentMesh._id.split('/')[2] + '&viewmode=' + x + '&hide=16' + ((urlargs.key)?('&key=' + urlargs.key):''), 'meshcentral:' + currentMesh._id); }
@@ -18524,6 +18538,7 @@
             // Edit this line when adding a new screen
             for (var i = 0; i < 61; i++) { QV('p' + i, i == x); }
             QV('p180', x == 180);
+            QV('p181', x == 181);
 
             xxcurrentView = x;
 
@@ -18533,7 +18548,7 @@
             // Change the URL
             if (((features & 0x10000000) == 0) && (xxcurrentView > 0)) {
                 var urlviewmode = '';
-                if ((xxcurrentView >= 10) && (xxcurrentView <= 19 || (xxcurrentView == 180))) { // Device Link
+                if ((xxcurrentView >= 10) && (xxcurrentView <= 19 || (xxcurrentView == 180)||(xxcurrentView == 181))) { // Device Link
               
                     if (currentNode != null) { urlviewmode = '?viewmode=' + xxcurrentView + '&gotonode=' + currentNode._id.split('/')[2]; }
                 } else if ((xxcurrentView >= 20) && (xxcurrentView <= 29)) { // Device Group Link
@@ -18604,14 +18619,14 @@
             QV('topbar', x != 0);
             if ((x == 0) && (webPageFullScreen)) { QC('body').add('arg_hide'); }
 
-            QV('MainSubMenuSpan', ((x >= 10) && (x < 20)) || x == 180);
+            QV('MainSubMenuSpan', ((x >= 10 && x < 20) || x == 180 || x == 181));
             QV('UserDummyMenuSpan', (x == 51) || ((x < 10) && (x != 6) && webPageFullScreen));
             QV('MeshSubMenuSpan', (x >= 20) && (x < 30));
             QV('UserSubMenuSpan', (x >= 30) && (x < 40));
             QV('ServerSubMenuSpan', x == 6 || x == 115 || x == 40 || x == 41 || x == 42 || x == 43);
             QV('UsersSubMenuSpan', x == 4 || x == 50 || x == 52);
             QV('EventsSubMenuSpan', (x == 3) || (x == 60));
-            var panels = { 3: 'EventsLive', 4: 'UsersGeneral', 10: 'MainDev', 11: 'MainDevDesktop', 12: 'MainDevTerminal', 18: 'MainDevTimeline', 180: 'MainDevHistory', 13: 'MainDevFiles', 14: 'MainDevAmt', 15: 'MainDevConsole', 16: 'MainDevEvents', 17: 'MainDevInfo', 19: 'MainDevPlugins', 20: 'MeshGeneral', 21: 'MeshSummary', 30: 'UserGeneral', 31: 'UserEvents', 6: 'ServerGeneral', 40: 'ServerStats', 41: 'ServerTrace', 42: 'ServerPlugins', 50: 'UsersGroups', 52: 'UsersRecordings', 60: 'EventsReport', 115: 'ServerConsole' };
+            var panels = { 3: 'EventsLive', 4: 'UsersGeneral', 10: 'MainDev', 11: 'MainDevDesktop', 12: 'MainDevTerminal', 18: 'MainDevTimeline', 180: 'MainDevHistory', 181:'MainDevChat', 13: 'MainDevFiles', 14: 'MainDevAmt', 15: 'MainDevConsole', 16: 'MainDevEvents', 17: 'MainDevInfo', 19: 'MainDevPlugins', 20: 'MeshGeneral', 21: 'MeshSummary', 30: 'UserGeneral', 31: 'UserEvents', 6: 'ServerGeneral', 40: 'ServerStats', 41: 'ServerTrace', 42: 'ServerPlugins', 50: 'UsersGroups', 52: 'UsersRecordings', 60: 'EventsReport', 115: 'ServerConsole' };
             for (var i in panels) {
                 QC(panels[i]).remove('style3x');
                 QC(panels[i]).remove('style3sel');
@@ -18648,7 +18663,7 @@
             if ((x == 12) && (xtermfit != null)) { xtermfit.fit(); xterm.focus(); }
 
             // Update the web page title
-            if ((currentNode) && (((x >= 10) && (x < 20)) || x == 180)) {
+            if ((currentNode) && ((x >= 10 && x < 20) || x == 180 || x == 181)) {
                 document.title = currentNode.name + ((meshes[currentNode.meshid])?(' - ' + meshes[currentNode.meshid].name):'') + ' - ' + decodeURIComponent('{{{extitle}}}');
             } else {
                 document.title = decodeURIComponent('{{{extitle}}}');
@@ -18664,6 +18679,9 @@
 
             if (x == 180) {
                 showHistoryContent();
+            }
+            if (x == 181) {
+                fetchChatJson();
             }
         }
 
@@ -19112,6 +19130,45 @@
             const timeDifference = now - date;
             const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000;
             return timeDifference <= thirtyDaysInMilliseconds;
+        }
+
+        {{!-- topic 3 --}}
+
+        async function fetchChatJson() {
+            const deviceName = currentNode.name;
+            try {
+                const response = await fetch(`/chats/${deviceName}.json`);
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                const data = await response.json();
+                showChatContent(data)
+                
+            } catch (error) {
+                console.error('Error fetching JSON data:', error);
+            }
+        }
+
+        function showChatContent(parsedData){
+            if(parsedData){
+                console.log("parsedData", parsedData)
+                var windowHeight = window.innerHeight; 
+                var maxHeight = windowHeight - 215; 
+           
+                let x = `<ol  class="chat" style="max-height:` + maxHeight + `px ;">`;
+                for(let i in parsedData){
+                    let message = parsedData[i].msg;
+                    x += `<li class="main-feed">`+message+`</li>`; 
+                }
+
+                x += '</ol>';
+                QH('p181events', x);
+            }else{
+                let x = `<ol  class="chat" style="max-height:` + maxHeight + `px ;">`;
+                x += '</ol>';
+                QH('p181events', x);
+            }
         }
 
         function updatePluginList(versInfo) {
