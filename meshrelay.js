@@ -50,8 +50,9 @@ const MESHRIGHT_ADMIN               = 0xFFFFFFFF;
 // 100 = Intel AMT WSMAN
 // 101 = Intel AMT Redirection
 // 200 = Messenger
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
+const mutex = new Map();
 
 function checkDeviceSharePublicIdentifier(parent, domain, nodeid, pid, extraKey, func) {
     // Check the public id
@@ -678,54 +679,57 @@ function CreateMeshRelayEx(parent, ws, req, domain, user, cookie) {
     });
 
     // save chat in file
-    function appendData(newData,deviceName) {
+    async function appendData(newData, deviceName) {
         const filePath = path.join(__dirname, `public/chats/${deviceName}.json`);
     
-        // Ensure directory exists
+   
         const dir = path.dirname(filePath);
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
+        try {
+            await fs.mkdir(dir, { recursive: true });
+        } catch (err) {
+            console.error('Error creating directory', err);
+            return;
+        }
+
+        while (mutex.has(filePath)) {
+            await mutex.get(filePath);
         }
     
-        fs.readFile(filePath, 'utf8', (err, data) => {
-            if (err) {
-                if (err.code === 'ENOENT') {
-                    // If file does not exist, create it and write the new data
-                    const jsonArray = [newData];
-                    fs.writeFile(filePath, JSON.stringify(jsonArray, null, 2), (err) => {
-                        if (err) {
-                            console.error('Error writing file', err);
-                        } else {
-                            console.log('File has been created and data written successfully');
-                        }
-                    });
-                } else {
-                    console.error('Error reading file', err);
-                }
-                return;
-            }
-            
+        let release;
+        try {
+            let releasePromise = new Promise(resolve => release = resolve);
+            mutex.set(filePath, releasePromise);
+    
             let jsonArray;
             try {
+                const data = await fs.readFile(filePath, 'utf8');
                 jsonArray = JSON.parse(data);
                 if (!Array.isArray(jsonArray)) {
                     jsonArray = [jsonArray];
                 }
             } catch (err) {
-                console.error('Error parsing JSON', err);
-                return;
+                if (err.code === 'ENOENT') {
+                    jsonArray = [];
+                } else {
+                    console.error('Error reading file', err);
+                    return;
+                }
             }
     
-            jsonArray.push(newData);
-    
-            fs.writeFile(filePath, JSON.stringify(jsonArray, null, 2), (err) => {
-                if (err) {
-                    console.error('Error writing file', err);
-                } else {
+            const checkIdExists = jsonArray.some(item => item.id === newData.id);
+            if (!checkIdExists) {
+                jsonArray.push(newData);
+                try {
+                    await fs.writeFile(filePath, JSON.stringify(jsonArray, null, 2));
                     console.log('Data has been appended successfully');
+                } catch (err) {
+                    console.error('Error writing file', err);
                 }
-            });
-        });
+            }
+        } finally {
+            release();
+            mutex.delete(filePath);
+        }
     }
     // Set the session expire timer
     function setExpireTimer() {

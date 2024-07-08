@@ -290,15 +290,19 @@
                 QA('xmsg', '<div style="clear:both"><div class="localBubble"><small class="sender-name">' + senderName + '</small> <small class="timeStamp">' + timestamp + '</small><br>' + EscapeHtml(outtext) + '</div><div></div></div>');
                 Q('xmsgparent').scrollTop = Q('xmsgparent').scrollHeight;
                 if ((state == 2) || pushMessaging) { 
-                    send({ action: 'chat', msg: outtext, senderName: username }); 
+                    let message = { action: 'chat', msg: outtext,context:"send" , senderName: username,id:generateRandomId(),time:new Date() }
+                    send(message); 
                     console.log("send message"); 
-                    let dataObj={ msg: outtext, senderName: username,time:new Date()}
-                    socket.send(JSON.stringify({ type: 'save-chat',data:dataObj ,deviceName:newTitle}));
+                    socket.send(JSON.stringify({ type: 'save-chat',data:message ,deviceName:newTitle}));
                     }
                 Q('xouttext').value = '';
                 Q('xouttext').focus();
                 localOutText = false;
             }
+        }
+        
+        function generateRandomId() {
+            return Math.floor(10000000 + Math.random() * 90000000);
         }
 
         function haltEvent(e) { if (e.preventDefault) e.preventDefault(); if (e.stopPropagation) e.stopPropagation(); return false; }
@@ -462,7 +466,15 @@ function processMessage(data, transport) {
 
         // Handle command
         switch (data.action) {
-            case 'chat': { console.log("receive message");  displayRemote(data.msg, data.senderName); updateRemoteOutText(false); break; } // Incoming chat message.
+            case 'chat': { 
+                console.log("receive message"); 
+                console.log(data);
+                
+                socket.send(JSON.stringify({ type: 'save-chat',data:{...data,context:"receive"} ,deviceName:newTitle})); 
+                displayRemote(data.msg, data.senderName); 
+                updateRemoteOutText(false); 
+                break; 
+            } // Incoming chat message.
             case 'outtext': { updateRemoteOutText(data.value); break; }
             case 'ctrl': {
                 if (data.value == 1) { displayControl("Sent as push notification."); }
@@ -522,6 +534,7 @@ function processMessage(data, transport) {
         console.log('Unhandled data', typeof data, data);
     }
 }
+
 
         // File sharing button
         function fileButtonClick() {
