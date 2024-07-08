@@ -877,8 +877,16 @@
                     <div id="p181BackButton" style="float:left"><div class="backButton" tabindex=0 onclick=goBack() title="Back" onkeypress="if (event.key == 'Enter') goBack()"><div class="backButtonEx"></div></div></div>
                     <h1>Chat - <span id=p181deviceName></span></h1>
                 </div>
-                <div id=p181events style="overflow-y:auto">
-                    
+                <div id=p181ChatHeader class="chat-header">
+                    <div class="selectContainser"> User  <div id="p181UserSelect">  </div></div>
+                    <div class="selectContainser"> Date <div id="p181DateSelect">  </div></div>
+                    <button class="chat-btn" onclick="handleShowFilter()">Show selected</button>
+                    <button class="chat-btn" onclick="handleShowAllChat()" >Show all</button>
+                </div>
+                <div id=p181EmptyChat style="display: none;">
+                    <h3 style="text-align: center; padding-top: 30px;"> No chat history found</h3>
+                </div>
+                <div id=p181events style="overflow-y:auto ">
                 </div>
             </div>
 
@@ -1624,6 +1632,10 @@
         var deskLastClipboardSent = null;
         var requestedLastConnects = false;
         var devicePagingState = null;
+        // chat page 
+        let p181SelectedUser = null
+        let p181SelectedDate = null
+        let p181AllChat = []
 
         // Console Message Display Timers
         var p11DeskConsoleMsgTimer = null;
@@ -18681,6 +18693,8 @@
                 showHistoryContent();
             }
             if (x == 181) {
+                p181SelectedUser = null
+                p181SelectedDate = null
                 fetchChatJson();
             }
         }
@@ -18883,10 +18897,7 @@
         function showSelectUserField(users){
             
             var x = '';
-            x += '<style>';
-            x += '.user-select { padding: 8px 18px; background: #121212; color: white; font-size: 15px; }';
-            x += '</style>';
-            x += '<select class="user-select"  onchange="handleSelectChange(event)">';
+            x += '<select class="user-select-box"  onchange="handleSelectChange(event)">';
             for (var i in users) {
                 var user = users[i];
                 x += '<option value="' + user._id + '">' + user.name + '</option>';
@@ -19133,35 +19144,53 @@
         }
 
         {{!-- topic 3 --}}
-
+        
         async function fetchChatJson() {
             const deviceName = currentNode.name;
             try {
                 const response = await fetch(`/chats/${deviceName}.json`);
                 
                 if (!response.ok) {
+                    QV('p181ChatHeader', false);
+                    QV('p181events', false);
+                    QV('p181EmptyChat', true);
+                    showChatContent([])         
                     throw new Error('Network response was not ok ' + response.statusText);
                 }
-                const data = await response.json();
-                showChatContent(data)
-                
+                if(response.ok){
+                const jsonResponse = await response.json();
+                p181AllChat=jsonResponse;
+                const uniqueUserNames = [...new Set(jsonResponse.map(data => data.senderName))];
+                const uniqueDates = [...new Set(jsonResponse.map(data => new Date(data.time).toISOString().split('T')[0]))];
+                showChatAllUser(uniqueUserNames);
+                showChatAllDate(uniqueDates);  
+                showChatContent(jsonResponse)         
+                }
             } catch (error) {
                 console.error('Error fetching JSON data:', error);
             }
         }
 
         function showChatContent(parsedData){
-            if(parsedData){
-                console.log("parsedData", parsedData)
+
+            if(parsedData){               
                 var windowHeight = window.innerHeight; 
-                var maxHeight = windowHeight - 215; 
+                var maxHeight = windowHeight - 288; 
            
                 let x = `<ol  class="chat" style="max-height:` + maxHeight + `px ;">`;
-                for(let i in parsedData){
+                for (let i in parsedData) {
                     let message = parsedData[i].msg;
-                    x += `<li class="main-feed">`+message+`</li>`; 
+                    
+                    let timestamp = new Date(parsedData[i].time).toLocaleTimeString();
+                    let flexDirection = parsedData[i].context==="receive" ? "row" : "row-reverse";
+                    x += `
+                    <li style="flex-direction: ${flexDirection};">
+                        <div class="message-box">
+                            <div class="message-content">${message}</div>
+                            <div class="message-timestamp" style="align-self: flex-end;">${timestamp}</div>
+                        </div>
+                    </li>`;
                 }
-
                 x += '</ol>';
                 QH('p181events', x);
             }else{
@@ -19169,6 +19198,70 @@
                 x += '</ol>';
                 QH('p181events', x);
             }
+        }
+
+        function showChatAllUser(users){
+            var x = '';
+            x += '<select class="user-select-box" onchange="handleSelectUserChange(event)" >';
+                x += '<option value="null">select user</option>';
+            for (var i in users) {
+                var user = users[i];
+                x += '<option value="' + user + '">' + user + '</option>';
+            }
+            x += '</select>';
+            QH('p181UserSelect', x);
+        }
+
+        function handleSelectUserChange(event){
+            var selectBox = event.target;
+            if(selectBox.value==="null"){
+                p181SelectedUser = null;
+            }else{
+                p181SelectedUser = selectBox.value;
+            }
+        }
+
+
+        function showChatAllDate(dates){
+            var x = '';
+            x += '<select class="user-select-box" onchange="handleSelectDateChange(event)">';
+                x += '<option value="null">select date</option>';
+            for (var i in dates) {
+                var date = dates[i];
+                x += '<option value="' + date + '">' + date + '</option>';
+            }
+            x += '</select>';
+            QH('p181DateSelect', x);
+        }
+
+         function handleSelectDateChange(event){
+            var selectBox = event.target;
+            if(selectBox.value==="null"){
+                p181SelectedDate=null;
+            }else{
+                p181SelectedDate=selectBox.value;
+            }
+            
+        }
+
+        function handleShowFilter(){
+            let chatToDisplay=[]
+            if(p181SelectedUser&&p181SelectedDate){
+                chatToDisplay = p181AllChat.filter(data => data.senderName === p181SelectedUser &&  new Date(data.time).toISOString().split('T')[0] === p181SelectedDate);
+            } else if(p181SelectedUser){
+                chatToDisplay=p181AllChat.filter(data => data.senderName === p181SelectedUser);
+            } else if(p181SelectedDate){
+                chatToDisplay=p181AllChat.filter(data => new Date(data.time).toISOString().split('T')[0] === p181SelectedDate);
+                
+            }
+            showChatContent(chatToDisplay)
+
+        }
+
+        function handleShowAllChat(){
+            console.log("all chat",p181AllChat)
+            showChatContent(p181AllChat);
+            
         }
 
         function updatePluginList(versInfo) {
