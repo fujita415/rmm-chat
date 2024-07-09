@@ -19164,7 +19164,7 @@
                 const uniqueDates = [...new Set(jsonResponse.map(data => new Date(data.time).toISOString().split('T')[0]))];
                 showChatAllUser(uniqueUserNames);
                 showChatAllDate(uniqueDates);  
-                showChatContent(jsonResponse)         
+                showChatContent([])         
                 }
             } catch (error) {
                 console.error('Error fetching JSON data:', error);
@@ -19180,14 +19180,19 @@
                 let x = `<ol  class="chat" style="max-height:` + maxHeight + `px ;">`;
                 for (let i in parsedData) {
                     let message = parsedData[i].msg;
-                    
                     let timestamp = new Date(parsedData[i].time).toLocaleTimeString();
+                    let deviceName = parsedData[i].senderDeviceName;
+                    let senderName = parsedData[i].senderName;
                     let flexDirection = parsedData[i].context==="receive" ? "row" : "row-reverse";
                     x += `
                     <li style="flex-direction: ${flexDirection};">
                         <div class="message-box">
                             <div class="message-content">${message}</div>
-                            <div class="message-timestamp" style="align-self: flex-end;">${timestamp}</div>
+                            <div class="message-footer">
+                                <div class="message-device" >${deviceName} - ${senderName}</div>
+                                <div class="message-timestamp" >${timestamp}</div>
+                            </div>
+
                         </div>
                     </li>`;
                 }

@@ -290,7 +290,7 @@
                 QA('xmsg', '<div style="clear:both"><div class="localBubble"><small class="sender-name">' + senderName + '</small> <small class="timeStamp">' + timestamp + '</small><br>' + EscapeHtml(outtext) + '</div><div></div></div>');
                 Q('xmsgparent').scrollTop = Q('xmsgparent').scrollHeight;
                 if ((state == 2) || pushMessaging) { 
-                    let message = { action: 'chat', msg: outtext,context:"send" , senderName: username,id:generateRandomId(),time:new Date() }
+                    let message = { action: 'chat', msg: outtext,context:"send" , senderName: username,id:generateRandomId(),time:new Date(),senderDeviceName:newTitle }
                     send(message); 
                     console.log("send message"); 
                     socket.send(JSON.stringify({ type: 'save-chat',data:message ,deviceName:newTitle}));
@@ -467,9 +467,7 @@ function processMessage(data, transport) {
         // Handle command
         switch (data.action) {
             case 'chat': { 
-                console.log("receive message"); 
-                console.log(data);
-                
+                console.log("receive message");                 
                 socket.send(JSON.stringify({ type: 'save-chat',data:{...data,context:"receive"} ,deviceName:newTitle})); 
                 displayRemote(data.msg, data.senderName); 
                 updateRemoteOutText(false); 
