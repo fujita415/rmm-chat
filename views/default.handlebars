@@ -8646,7 +8646,7 @@
                         }
                     }
                 }
-                x += '<tr class=' + (((count % 2) == 0)?'altBack':'') + '><td><div style="color: #fff;">&nbsp;' + printDate(date) + '<div></div></div></td><td><div>' + datavalue + '</div></td></tr>';
+                x += '<tr class=' + (((count % 2) == 0)?'altBack':'') + '><td><div style="background-color: #000; color: #fff;">&nbsp;' + printDate(date) + '<div></div></div></td><td><div>' + datavalue + '</div></td></tr>';
                 ++count;
                 date = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
             }
@@ -15478,7 +15478,7 @@
             x += '<div class=bar>';
             x += '<div class=baricon><input class=UserCheckbox value=' + encodeURIComponentEx(user._id) + ' onclick=p3updateInfo() type=checkbox' + ((user._id == userinfo._id)?' disabled':'') + '></div><div style=cursor:pointer onclick=gotoUser("' + encodeURIComponentEx(user._id) + '",false,event)>';
             x += '<div class=baricon><div class="' + icon + gray + '"></div></div>';
-            x += '<div class=g1></div><div class=g2></div><div>';
+            x += '<div>';
             x += '<div><span style=line-height:24px>' + username + '</span>' + msg + '</div></div><td style=text-align:center>' + groups + '<td style=text-align:center>' + lastAccess + '<td style=text-align:center>' + permissions;
             return x;
         }
