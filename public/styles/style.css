@@ -2371,13 +2371,13 @@ a {
   float: left;
 }
 
-.g1s {
+/* .g1s {
   background-image: linear-gradient(to right, #fff 0%, #b9b9b9 100%);
 }
 
 .night .g1s {
   background-image: linear-gradient(to right, #000 0%, #444 100%);
-}
+} */
 
 .g2t {
   background-position: 0% 0%;
@@ -2431,13 +2431,13 @@ a {
   float: right;
 }
 
-.g2s {
+/* .g2s {
   background-image: linear-gradient(to right, #b9b9b9 0%, #fff 100%);
 }
 
 .night .g2s {
   background-image: linear-gradient(to right, #444 0%, #000 100%);
-}
+} */
 
 .h1pre {
   width: 16px;
@@ -2570,6 +2570,11 @@ a {
 #p3users .bar {
   width: 100%;
   font-size: medium;
+  background-color: #121212;
+}
+
+#p3users .baricon {
+   background-color: #121212;
 }
 
 .baricon {
