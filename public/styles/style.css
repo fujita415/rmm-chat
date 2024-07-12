@@ -1477,7 +1477,6 @@ NoMeshesPanel img {
 
 #p10html2 table {
   color: black;
-  background-color: #eee;
   border-color: #aaa;
   border-width: 1px;
   border-style: solid;
@@ -1502,7 +1501,10 @@ NoMeshesPanel img {
 }
 
 #p10html2 .altBack {
-  background-color: #ddd;
+  /* background-color: #ddd; */
+}
+#p10html2 tbody tr td {
+    border-bottom: solid 1px #777;
 }
 
 .pwState {

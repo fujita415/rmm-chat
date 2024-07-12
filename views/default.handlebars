@@ -7985,7 +7985,7 @@
                         x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#DDD' : '') + '><td style=width:30%><div title="' + (ugroup?"User Group":"User") + '" class=m' + (ugroup?4:2) + '></div><div>&nbsp;' + username + '<div></div></div></td><td style=width:70%><div style=float:right>' + trash + '</div><div>' + rights + '</div></td></tr>';
                     }
                 }
-                if (count == 1) { x += '<tr><td><div style=padding:6px>&nbsp;<i>' + "No users with special device permissions" + '</i><div></div></div></td><td></td></tr>'; }
+                if (count == 1) { x += '<tr><td><div style="padding:6px; color:white;">&nbsp;<i>' + "No users with special device permissions" + '</i><div></div></div></td><td></td></tr>'; }
                 x += '</tbody></table>';
 
                 // Show device shares
@@ -8646,7 +8646,7 @@
                         }
                     }
                 }
-                x += '<tr class=' + (((count % 2) == 0)?'altBack':'') + '><td><div style="background-color: #000; color: #fff;">&nbsp;' + printDate(date) + '<div></div></div></td><td><div>' + datavalue + '</div></td></tr>';
+                x += '<tr class=' + (((count % 2) == 0)?'altBack':'') + '><td><div style="color: #fff;">&nbsp;' + printDate(date) + '<div></div></div></td><td><div>' + datavalue + '</div></td></tr>';
                 ++count;
                 date = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
             }
