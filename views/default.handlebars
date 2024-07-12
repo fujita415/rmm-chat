@@ -16307,7 +16307,7 @@
                     x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#DDD' : '') + '><td style=width:30%><div title="' + "Device Group" + '" class=m99></div><div>&nbsp;' + meshname + '<div></div></div></td><td style=width:70%><div style=float:right>' + trash + '</div><div>' + rights + '</div></td></tr>';
                 }
             }
-            if (count == 1) { x += '<tr><td><div style=padding:6px>&nbsp;<i>' + "No device groups in common" + '</i><div></div></div></td><td></td></tr>'; }
+            if (count == 1) { x += '<tr><td><div style=padding:6px color:white;>&nbsp;<i>' + "No device groups in common" + '</i><div></div></div></td><td></td></tr>'; }
             x += '</tbody></table>';
 
             // Display all devices for this user group
@@ -16330,7 +16330,7 @@
                     x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#DDD' : '') + '><td style=width:30%><div title="' + "Device Group" + '" class=m99></div><div>&nbsp;' + nodename + '<div></div></div></td><td style=width:70%><div style=float:right>' + trash + '</div><div>' + rights + '</div></td></tr>';
                 }
             }
-            if (count == 1) { x += '<tr><td><div style=padding:6px>&nbsp;<i>' + "No devices in common" + '</i><div></div></div></td><td></td></tr>'; }
+            if (count == 1) { x += '<tr><td><div style=padding:6px color:white;>&nbsp;<i>' + "No devices in common" + '</i><div></div></div></td><td></td></tr>'; }
             x += '</tbody></table>';
 
             if (((currentUserGroup.membershipType == null) || (usercount == 0)) && ((userinfo.siteadmin & 256) != 0)) {
@@ -17004,7 +17004,7 @@
                     x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#DDD' : '') + '><td style=width:30%><div title="' + "Device Group" + '" class=m99></div><div>&nbsp;' + meshname + '<div></div></div></td><td style=width:70%><div style=float:right>' + trash + '</div><div>' + rights + '</div></td></tr>';
                 }
             }
-            if (count == 1) { x += '<tr><td><div style=padding:6px>&nbsp;<i>' + "No device groups in common" + '</i><div></div></div></td><td></td></tr>'; }
+            if (count == 1) { x += '<tr><td><div style=padding:6px color:white;>&nbsp;<i>' + "No device groups in common" + '</i><div></div></div></td><td></td></tr>'; }
             x += '</tbody></table>';
 
             // Display user groups
@@ -17036,7 +17036,7 @@
                         x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#DDD' : '') + '><td><div title="' + "User Group" + '" class=m4></div><div>&nbsp;' + groupname + '<div></div></div></td><td><div style=float:right>' + trash + '</div></td></tr>';
                     }
                 }
-                if (count == 1) { x += '<tr><td><div style=padding:6px>&nbsp;<i>' + "No user group memberships" + '</i><div></div></div></td><td></td></tr>'; }
+                if (count == 1) { x += '<tr><td><div style=padding:6px color:white;>&nbsp;<i>' + "No user group memberships" + '</i><div></div></div></td><td></td></tr>'; }
                 x += '</tbody></table>';
             }
 
@@ -17062,7 +17062,7 @@
                     x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#DDD' : '') + '><td style=width:30%><div title="' + "Device" + '" class=si' + node.icon + '></div><div>&nbsp;' + nodename + '<div></div></div></td><td style=width:70%><div style=float:right>' + trash + '</div><div>' + rights + '</div></td></tr>';
                 }
             }
-            if (count == 1) { x += '<tr><td><div style=padding:6px>&nbsp;<i>' + "No devices in common" + '</i><div></div></div></td><td></td></tr>'; }
+            if (count == 1) { x += '<tr><td><div style=padding:6px color:white;>&nbsp;<i>' + "No devices in common" + '</i><div></div></div></td><td></td></tr>'; }
             x += '</tbody></table>';
 
             QH('p30html2', x);
