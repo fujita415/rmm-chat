@@ -746,7 +746,7 @@ body {
 .deviceBarCheckbox {
   width: 22px;
   float: left;
-  background-color: white;
+  background-color: #121212;
 }
 
 .night .deviceBarCheckbox {
@@ -761,7 +761,7 @@ body {
   float: left;
   height: 18px;
   width: 18px;
-  background-color: white;
+  background-color: #121212;
 }
 
 .night .deviceBarIcon {
@@ -1198,6 +1198,10 @@ NoMeshesPanel img {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+}
+
+#xdevices table tr td {
+    border-bottom: 1px solid #fff;
 }
 
 #xdevicesmap {
@@ -2153,8 +2157,8 @@ a {
 }
 
 .style10 {
-  background-color: #c9c9c9;
-  color: #000;
+  background-color: #121212;
+  color: #fff;
 }
 
 .night .style10 {
@@ -2346,8 +2350,8 @@ a {
   /* fallback (Opera) */
   /* Mozilla: */
   /* Chrome, Safari:*/
-  background-image: linear-gradient(to right, #fff 0%, #c9c9c9 100%);
-  background-color: #c9c9c9;
+  /* background-image: linear-gradient(to right, #fff 0%, #c9c9c9 100%); */
+  background-color: #121212;
   background-repeat: repeat;
   background-attachment: scroll;
 }
@@ -2406,8 +2410,8 @@ a {
   /* fallback (Opera) */
   /* Mozilla: */
   /* Chrome, Safari:*/
-  background-image: linear-gradient(to right, #c9c9c9 0%, #fff 100%);
-  background-color: #c9c9c9;
+  /* background-image: linear-gradient(to right, #c9c9c9 0%, #fff 100%); */
+  background-color: #121212;
   background-repeat: repeat;
   background-attachment: scroll;
 }
@@ -2606,7 +2610,7 @@ a {
 
 .bar18 {
   font-size: large;
-  background-color: #c9c9c9;
+  background-color: #121212;
   height: 18px;
   float: left;
   margin-bottom: 2px;

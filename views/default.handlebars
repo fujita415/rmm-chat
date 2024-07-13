@@ -7952,7 +7952,7 @@
                     }
                 }
 
-                x += '<table style="color:black;background-color:#EEE;border-color:#AAA;border-width:1px;border-style:solid;border-collapse:collapse" border=0 cellpadding=2 cellspacing=0 width=100%><tbody><tr style=background-color:#AAAAAA;font-weight:bold><th scope=col style=text-align:left;width:430px>' + "User Authorizations" + '</th><th scope=col style=text-align:left></th></tr>';
+                x += '<table style="color:white;background-color:#121212;border-color:#FFF;border-width:1px;border-style:solid;border-collapse:collapse" border=0 cellpadding=2 cellspacing=0 width=100%><tbody><tr style=background-color:#AAAAAA;font-weight:bold><th scope=col style=text-align:left;width:430px>' + "User Authorizations" + '</th><th scope=col style=text-align:left></th></tr>';
                 var count = 1;
                 if (currentNode.links != null) {
                     // Sort the list of users to display
@@ -7982,7 +7982,7 @@
                             }
                         }
 
-                        x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#DDD' : '') + '><td style=width:30%><div title="' + (ugroup?"User Group":"User") + '" class=m' + (ugroup?4:2) + '></div><div>&nbsp;' + username + '<div></div></div></td><td style=width:70%><div style=float:right>' + trash + '</div><div>' + rights + '</div></td></tr>';
+                        x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#121212' : '') + '><td style="width:30%;border-bottom:1px solid #fff"><div title="' + (ugroup?"User Group":"User") + '" class=m' + (ugroup?4:2) + '></div><div>&nbsp;' + username + '<div></div></div></td><td style="width:70%;border-bottom:1px solid #fff"><div style=float:right>' + trash + '</div><div>' + rights + '</div></td></tr>';
                     }
                 }
                 if (count == 1) { x += '<tr><td><div style="padding:6px; color:white;">&nbsp;<i>' + "No users with special device permissions" + '</i><div></div></div></td><td></td></tr>'; }
@@ -7991,7 +7991,7 @@
                 // Show device shares
                 if ((deviceShares != null) && (deviceSharesNode == currentNode._id) && (deviceShares.length > 0)) {
 
-                    x += '<br /><table style="color:black;background-color:#EEE;border-color:#AAA;border-width:1px;border-style:solid;border-collapse:collapse" border=0 cellpadding=2 cellspacing=0 width=100%><tbody><tr style=background-color:#AAAAAA;font-weight:bold><th scope=col style=text-align:left;width:430px>' + "Active Device Sharing" + '</th><th scope=col style=text-align:left></th></tr>';
+                    x += '<br /><table style="color:white;background-color:#121212;border-color:#FFF;border-width:1px;border-style:solid;border-collapse:collapse" border=0 cellpadding=2 cellspacing=0 width=100%><tbody><tr style=background-color:#AAAAAA;font-weight:bold><th scope=col style=text-align:left;width:430px>' + "Active Device Sharing" + '</th><th scope=col style=text-align:left></th></tr>';
                     count = 1;
                     for (var i = 0; i < deviceShares.length; i++) {
                         var dshare = deviceShares[i], trash = '';
@@ -8018,7 +8018,7 @@
                         }
                         var guestName = EscapeHtml(dshare.guestName);
                         if (dshare.publicid.startsWith('AS:node/')) { guestName = '<i>' + "Agent Self-Share" + '</i>'; }
-                        x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#DDD' : '') + '><td style=width:30%><div class=m' + 2 + '></div><div>&nbsp;' + guestName + '<div></div></div></td><td style=width:70%><div style=float:right>' + trash + '</div><div>' + details + '</div></td></tr>';
+                        x += '<tr ' + (((++count % 2) == 0) ? 'style=background-color:#121212' : '') + '><td style="width:30%;border-bottom:1px solid #fff"><div class=m' + 2 + '></div><div>&nbsp;' + guestName + '<div></div></div></td><td style="width:70%;border-bottom:1px solid #fff"><div style=float:right>' + trash + '</div><div>' + details + '</div></td></tr>';
                     }
                     x += '</tbody></table>';
                 }
