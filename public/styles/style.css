@@ -3055,10 +3055,15 @@ a {
 .serverStateTableCell {
   width: 300px;
   height: 24px;
-  background-color: #d3d9d6;
+  background-color: #121212;
   margin-bottom: 4px;
   vertical-align: middle;
   border-spacing: 0;
+  border-bottom: 1px solid lightgray;
+}
+
+.serverStateTableCell .h1, .serverStateTableCell .h2 {
+    background-color: #121212;
 }
 
 .night .serverStateTableCell {
